@@ -132,6 +132,16 @@ export default {
             }
         },
         onSubmit() {
+            console.log('submit hasPermission', this.hasPermission);
+            console.log('submit selectedArSDKType', this.selectedArSDKType);
+            console.log('submit arcoreSupportStatus', this.arcoreSupportStatus);
+            console.log('submit arcoreInstallStatus', this.arcoreInstallStatus);
+            console.log('submit arengineSupportStatus', this.arengineSupportStatus);
+            console.log('submit arengineInstallStatus', this.arengineInstallStatus);
+            console.log('submit arengineInstallStatus', this.isARReady);
+
+            this.updateStatus();
+
             if (!this.isARReady) {
                 Dialog({ message: '没有找到可用的 AR SDK 环境，当前只支持SR应用。' })
                 .then(() => {
@@ -139,7 +149,7 @@ export default {
                     this.$router.replace("/");    
                 });
             } else {
-                Toast("当前选择 AR SDK " + this.selectedArSDK);
+                Toast("AR 环境已准备好进入首页");
                 this.active++;
                 this.$router.replace("/");
             }

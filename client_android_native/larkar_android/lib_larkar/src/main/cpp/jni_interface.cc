@@ -75,14 +75,26 @@ void ArActivity_Toast(const char* message) {
     }
     EnvWrapper env = GetEnvWrapper();
     jclass clazz = env.get()->GetObjectClass(g_ar_activity_);
-//    jclass clazz = env.get()->FindClass("com/pxy/liblarkar/ArActivity");
-    jmethodID mid = env.get()->GetMethodID(clazz, "showJniToast", "(Ljava/lang/String;)V");
+    jmethodID mid = env.get()->GetMethodID(clazz, "showToast", "(Ljava/lang/String;)V");
 
     jstring jstr = env.get()->NewStringUTF(message);
-
     env.get()->CallVoidMethod(g_ar_activity_, mid, jstr);
 
-    env.get()->ReleaseStringUTFChars(jstr, message);
+    env.get()->DeleteLocalRef(jstr);
+    env.get()->DeleteLocalRef(clazz);
+}
+
+void ArActivity_Error(const char* error) {
+    if (g_ar_activity_ == nullptr) {
+        return;
+    }
+    EnvWrapper env = GetEnvWrapper();
+    jclass clazz = env.get()->GetObjectClass(g_ar_activity_);
+    jmethodID mid = env.get()->GetMethodID(clazz, "onError", "(Ljava/lang/String;)V");
+
+    jstring jstr = env.get()->NewStringUTF(error);
+    env.get()->CallVoidMethod(g_ar_activity_, mid, jstr);
+
     env.get()->DeleteLocalRef(jstr);
     env.get()->DeleteLocalRef(clazz);
 }

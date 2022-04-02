@@ -2,6 +2,7 @@ import {
     createStore
 } from 'vuex'
 import Native from '../utils/native'
+import { Toast } from 'vant';
 
 export default createStore({
     state: {
@@ -218,27 +219,35 @@ export default createStore({
         },
 
         checkArcoreSupport({
-            commit
+            commit,
+            getters
         }) {
             commit('setArcoreSupportStatus', Native.arcoreSupportStatus());
+            Toast(getters.arcoreSupportStatusText);
         },
 
         checkArcoreInstall({
-            commit
+            commit,
+            getters,
         }, require) {
             commit('setArcoreInstallStatus', Native.arcoreInstallStatus(require));
+            Toast(getters.arcoreInstallStatusText);
         },
 
         checkArengineSupport({
-            commit
+            commit,
+            getters,
         }) {
             commit('setArengineSupportStatus', Native.hwarengineSupportStatus());
+            Toast(getters.arengineSupportStatusText);
         },
 
         checkArengineInstall({
-            commit
+            commit,
+            getters,
         }, require) {
             commit('setArengineInstallStatus', Native.hwarengineInstallStatus(require));
+            Toast(getters.arengineInstallStatusText);
         },
     },
 })

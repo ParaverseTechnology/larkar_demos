@@ -29,8 +29,11 @@ public:
     void OnTouched(float x, float y,jboolean longtap);
 
     // hw decoder callback textrue.
+    virtual void OnConnected() override;
+    virtual void OnClose(int code) override;
     virtual void RequestTrackingInfo() override;
     virtual void OnTrackingFrame(const larkxrTrackingFrame& trackingFrame) override;
+    virtual void OnInfo(int infoCode, const std::string& msg) override;
     virtual void OnError(int errCode, const std::string& msg) override;
 
     inline void set_rotation_radius(float radius) { rotation_radius_ = radius; };

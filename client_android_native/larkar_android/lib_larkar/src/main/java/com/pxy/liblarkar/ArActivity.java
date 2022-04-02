@@ -101,7 +101,7 @@ public class ArActivity extends Activity {
             public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
                 Log.i(TAG,"onGlSurfaceCreated");
                 JniInterface.onGlSurfaceCreated(mNativeApplication);
-                showJniToast("寻找平面中，点击平面开始连接云端渲染");
+                showToast("寻找平面中，点击平面开始连接云端渲染");
             }
 
             @Override
@@ -189,7 +189,7 @@ public class ArActivity extends Activity {
                     factor = detector.getScaleFactor();
                     speed = -0.05f;
                 }
-                mScaleFactor += mScaleFactor > 1 ? speed * factor : speed * factor * 0.1;
+                mScaleFactor += mScaleFactor > 1 ? speed * factor : speed * factor * 0.4;
 
                 // Don't let the object get too small or too large.
                 mScaleFactor = Math.max(1.0f, Math.min(mScaleFactor, 8.0f));
@@ -256,15 +256,32 @@ public class ArActivity extends Activity {
         }
     }
 
-    public void showJniToast(String msg) {
-        runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
+    public void onError(String err) {
+        runOnUiThread(() ->  {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(this)
+                    .setTitle("Error：")
+                    .setMessage(err)
+                    .setPositiveButton("返回", (dialogInterface, i) -> finish());
+
+            builder.create().show();
+        });
+    }
+
+    public void showToast(String msg) {
+        runOnUiThread(() ->  {
+            Log.d(TAG, "showToast " + msg);
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void doBack(){
         AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(this).setTitle("退出应用")
-                .setMessage("确定退出么").setPositiveButton("确定",
-                        (dialogInterface, i) -> finish()).setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss());
+        builder = new AlertDialog.Builder(this)
+                .setTitle("退出应用")
+                .setMessage("确定退出么")
+                .setPositiveButton("确定", (dialogInterface, i) -> finish())
+                .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss());
 
         builder.create().show();
     }

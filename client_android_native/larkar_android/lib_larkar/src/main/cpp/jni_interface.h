@@ -34,5 +34,6 @@ JNIEnv *GetJniEnv();
 jclass FindClass(const char *classname);
 
 void ArActivity_Toast(const char* message);
+void ArActivity_Error(const char* error);
 }  // extern "C"
 #endif

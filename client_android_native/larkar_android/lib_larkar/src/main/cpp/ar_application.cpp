@@ -102,9 +102,11 @@ void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int
     lark::XRConfig::fps = 60;
     LOGD("width-height^%d^%d", width_, height_);
     // 分辨率要跟手机上一样
-    lark::XRConfig::render_width = 1280;
-    //lark::XRConfig::render_width = width_;
-    lark::XRConfig::render_height = 720;
+    lark::XRConfig::render_width = width_;
+    lark::XRConfig::render_height = height_;
+
+//    lark::XRConfig::render_width = 1280;
+//    lark::XRConfig::render_height = 720;
 
     lark::XRConfig::QuickConfigWithDefaulSetup(lark::QuickConfigLevel_Fast);
 
@@ -203,5 +205,30 @@ void ArApplication::RequestTrackingInfo() {
 
 void ArApplication::OnError(int errCode, const std::string &msg) {
     LOGE("on xr client error %d; msg %s;", errCode, msg.c_str());
+    ArActivity_Error(msg.c_str());
+}
+
+void ArApplication::OnInfo(int infoCode, const std::string &msg) {
+    LOGI("on xr client info %d; msg %s;", infoCode, msg.c_str());
     ArActivity_Toast(msg.c_str());
+}
+
+void ArApplication::OnConnected() {
+    LOGI("on xr client OnConnected");
+    ArActivity_Toast("连接成功，正在启动云端应用");
+}
+
+void ArApplication::OnClose(int code) {
+    LOGI("on xr client OnClose %d", code );
+    switch(code) {
+        case LK_XR_MEDIA_TRANSPORT_CHANNEL_CLOSED:
+            ArActivity_Error("与服务器媒体传输通道连接关闭");
+            break;
+        case LK_RENDER_SERVER_CLOSE:
+            ArActivity_Error("与渲染服务器 TCP 连接关闭");
+            break;
+        case LK_PROXY_SERVER_CLOSE:
+            ArActivity_Error("与渲染服务器代理连接关闭");
+            break;
+    }
 }
