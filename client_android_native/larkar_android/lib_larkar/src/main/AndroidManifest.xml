@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pxy.liblarkar">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:glEsVersion="0x00030001" android:required="true"/>
+    <!-- Limits app visibility in the Google Play Store to ARCore supported devices
+     (https://developers.google.com/ar/devices). -->
+    <uses-feature android:name="android.hardware.camera.ar" />
+</manifest>

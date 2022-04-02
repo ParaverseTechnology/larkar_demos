@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/work/client/larkar_client_demos/android_h5ui_nativear/larkar_android/app/src/main/res/layout/activity_main.xml" value="0.3111413043478261" />
+        <entry key="..\:/work/client/larkar_client_demos/android_h5ui_nativear/larkar_android/larkar_h5ui/src/main/res/layout/activity_main.xml" value="0.17291666666666666" />
+        <entry key="..\:/work/client/larkar_client_demos/android_h5ui_nativear/larkar_android/lib_larkar/src/main/res/layout/activity_ar.xml" value="0.24583333333333332" />
+        <entry key="..\:/work/client/larkar_client_demos/android_h5ui_nativear/larkar_android/lib_larkar/src/main/res/layout/activity_connection_app_market.xml" value="0.24583333333333332" />
+        <entry key="..\:/work/client/larkar_client_demos/android_h5ui_nativear/larkar_android/lib_larkar/src/main/res/layout/ar_layout.xml" value="0.17844202898550723" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
