@@ -7,76 +7,122 @@
         @click-left="onClickLeft"
     />
      <section class="section">
-        <div class="block">
-            <div class="block-title">
-                <div>
-                    服务器地址
+        <van-tabs v-model:active="active" sticky animated>
+            <van-tab title='服务器地址'>
+                <div class="block">
+                    <div class="block-title">
+                        <div>
+                            服务器地址
+                        </div>
+                        <div>
+                            例: http://192.168.0.55:8181/
+                        </div>
+                    </div>
+                    <van-field v-model="serverAddress" label="地址" placeholder="请输服务器地址" 
+                        :rules="[{ required: true, message: '请输服务器地址' }]">
+                    </van-field>
+                    <div style="margin: 16px;">
+                        <van-button round block plain :type="serverAddressButtonType" :loading="checkingServer" loading-text="测试地址中..." @click="onSubmitServerAddress">
+                            {{serverAddressButton}}
+                        </van-button>
+                    </div>
                 </div>
-                <div>
-                    例: http://192.168.0.55:8181/
+            </van-tab>
+            <van-tab title='AR 环境'>
+                <div class="block">
+                    <div class="block-title">
+                        权限
+                    </div>
+                    <van-cell-group>
+                        <van-cell title="摄像头" :label="hasPermission ? '已获取' : '未获取'">
+                            <template #right-icon>
+                                <van-button size="small" @click="checkHasPersission">
+                                    检测
+                                </van-button>
+                            </template>
+                        </van-cell>
+                    </van-cell-group>
                 </div>
-            </div>
-            <van-field v-model="serverAddress" label="地址" placeholder="请输服务器地址" 
-                :rules="[{ required: true, message: '请输服务器地址' }]">
-            </van-field>
-            <div style="margin: 16px;">
-                <van-button round block plain :type="serverAddressButtonType" :loading="checkingServer" loading-text="测试地址中..." @click="onSubmitServerAddress">
-                    {{serverAddressButton}}
-                </van-button>
-            </div>
-        </div>
-        <div class="block">
-            <van-radio-group v-model="selectedArSDKString">
-                <div class="block-title">
-                    Google ARCore
+                <div class="block">
+                    <van-radio-group v-model="selectedArSDKString">
+                        <div class="block-title">
+                            Google ARCore
+                        </div>
+                        <van-cell-group>
+                            <van-cell title="使用 ARCore" :label="arcoreStatusReason" :clickable="isArcoreReady" @click="isArcoreReady && selectARSDK(1)">
+                                <template #right-icon>
+                                    <van-radio name="1" :disabled="!isArcoreReady" />
+                                </template>
+                            </van-cell>
+                            <van-cell :title="arcoreSupportStatusText">
+                                <template #right-icon>
+                                    <van-button size="small" @click="checkArcoreSupport">
+                                        检测
+                                    </van-button>
+                                </template>
+                            </van-cell>
+                            <van-cell :title="arcoreInstallStatusText">
+                                <template #right-icon>
+                                    <van-button size="small" @click="checkArcoreInstall(true)">
+                                        安装
+                                    </van-button>
+                                </template>
+                            </van-cell>
+                        </van-cell-group>
+                        <div class="block-title">
+                            Huawei AREngine
+                        </div>
+                        <van-cell-group>
+                            <van-cell title="使用 AREngine" :label="arengineStatusReason" :clickable="isArengineReady" @click="isArengineReady && selectARSDK(2)">
+                                <template #right-icon>
+                                    <van-radio name="2" :disabled="!isArengineReady" />
+                                </template>
+                            </van-cell>
+                            <van-cell :title="arengineSupportStatusText">
+                                <template #right-icon>
+                                    <van-button size="small" @click="checkArengineSupport">
+                                        检测
+                                    </van-button>
+                                </template>
+                            </van-cell>
+                            <van-cell :title="arengineInstallStatusText">
+                                <template #right-icon>
+                                    <van-button size="small" @click="checkArengineInstall(true)">
+                                        安装
+                                    </van-button>
+                                </template>
+                            </van-cell>
+                        </van-cell-group>
+                    </van-radio-group>
                 </div>
-                <van-cell-group>
-                    <van-cell title="使用 ARCore" :label="arcoreStatusReason" :clickable="isArcoreReady" @click="isArcoreReady && selectARSDK(1)">
-                        <template #right-icon>
-                            <van-radio name="1" :disabled="!isArcoreReady" />
-                        </template>
-                    </van-cell>
-                    <van-cell :title="arcoreSupportStatusText">
-                        <template #right-icon>
-                            <van-button size="small" @click="checkArcoreSupport">
-                                检测
-                            </van-button>
-                        </template>
-                    </van-cell>
-                    <van-cell :title="arcoreInstallStatusText">
-                        <template #right-icon>
-                            <van-button size="small" @click="checkArcoreInstall(true)">
-                                安装
-                            </van-button>
-                        </template>
-                    </van-cell>
-                </van-cell-group>
-                <div class="block-title">
-                    Huawei AREngine
+            </van-tab>
+            <van-tab title="LarkXR">
+                <div class="block">
+                    <div class="block-title">
+                        快速设置
+                    </div>
+                    <van-radio-group v-model="quickConfigLevelString">
+                        <van-cell-group>
+                            <van-cell title="流畅" clickable @click="selectQuickConfigLevel(2)">
+                                <template #right-icon>
+                                    <van-radio name="2"/>
+                                </template>
+                            </van-cell>
+                            <van-cell title="标准" clickable @click="selectQuickConfigLevel(3)">
+                                <template #right-icon>
+                                    <van-radio name="3"/>
+                                </template>
+                            </van-cell>
+                            <van-cell title="高清" clickable @click="selectQuickConfigLevel(4)">
+                                <template #right-icon>
+                                    <van-radio name="4"/>
+                                </template>
+                            </van-cell>
+                        </van-cell-group>
+                    </van-radio-group>
                 </div>
-                <van-cell-group>
-                    <van-cell title="使用 AREngine" :label="arengineStatusReason" :clickable="isArengineReady" @click="isArengineReady && selectARSDK(2)">
-                        <template #right-icon>
-                            <van-radio name="2" :disabled="!isArengineReady" />
-                        </template>
-                    </van-cell>
-                    <van-cell :title="arengineSupportStatusText">
-                        <template #right-icon>
-                            <van-button size="small" @click="checkArengineSupport">
-                                检测
-                            </van-button>
-                        </template>
-                    </van-cell>
-                    <van-cell :title="arengineInstallStatusText">
-                        <template #right-icon>
-                            <van-button size="small" @click="checkArengineInstall(true)">
-                                安装
-                            </van-button>
-                        </template>
-                    </van-cell>
-                </van-cell-group>
-            </van-radio-group>
-        </div>
+            </van-tab>
+        </van-tabs>
     </section>
   </div>
 </template>
@@ -87,6 +133,7 @@ import Fetch from '../utils/fetch';
 export default {
     data() {
         return {
+            active: 0,
             checkingServer: false,
             serverAddressStatus: 0,
             serverAddress: '',
@@ -136,7 +183,7 @@ export default {
                 Fetch.Get("/getVersionInfo")
                 .then((res) => {
                     console.log('检测服务器地址成功', res);
-                    Toast("设置成功: " + res.version);
+                    Toast("设置成功. 服务器版本：" + res.version);
                     this.serverAddressStatus = 1;
                 })
                 .catch((e) => {

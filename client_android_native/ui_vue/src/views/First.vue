@@ -33,6 +33,20 @@
             </div>
         </div>
         <div v-if="active == 0" class="block">
+            <div class="block">
+                <div class="block-title">
+                    权限
+                </div>
+                <van-cell-group>
+                    <van-cell title="摄像头" :label="hasPermission ? '已获取' : '未获取'">
+                        <template #right-icon>
+                            <van-button size="small" @click="checkHasPersission">
+                                检测
+                            </van-button>
+                        </template>
+                    </van-cell>
+                </van-cell-group>
+            </div>
             <van-radio-group v-model="selectedArSDKString">
                 <div class="block-title">
                     Google ARCore
@@ -153,9 +167,13 @@ export default {
                 this.active++;
                 this.$router.replace("/");
             }
-            
         }
-    }
+    },
+    mounted() {
+        if (!this.isArcoreReady && this.isArengineReady) {
+            this.selectARSDK(2);
+        }
+    },
 }
 </script>
 <style scoped>

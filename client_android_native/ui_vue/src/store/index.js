@@ -18,6 +18,9 @@ export default createStore({
         arcoreInstallStatus: -1,
         arengineSupportStatus: -1,
         arengineInstallStatus: -1,
+
+        // 2 == fast, 3 == normal, 4 == extreme
+        quickConfigLevel: Native.QuickConfigLevel_Fast,
     },
     getters: {
         isArcoreReady(state) {
@@ -121,6 +124,9 @@ export default createStore({
                     return '安装失败';
                 }
             }
+        },
+        quickConfigLevelString(state) {
+            return state.quickConfigLevel + "";
         }
     },
     mutations: {
@@ -151,6 +157,10 @@ export default createStore({
 
         setArengineInstallStatus(state, arengineInstallStatus) {
             state.arengineInstallStatus = arengineInstallStatus;
+        },
+
+        setQuickConfigLevel(state, level) {
+            state.quickConfigLevel = level;
         }
     },
     actions: {
@@ -206,16 +216,58 @@ export default createStore({
             Native.selectARSDK(sdkType);
         },
 
+        selectQuickConfigLevel({
+            commit,
+        }, level) {
+            commit('setQuickConfigLevel', level);
+            localStorage.setItem('quickConfigLevel', level);
+            Native.selectQuickConfigLevel(parseInt(level));
+        },
+
+        restoreQuickConfigLevel({
+            commit,
+            dispatch,
+        }) {
+            let level = localStorage.getItem('quickConfigLevel', level);
+            // save default
+            if (!level) {
+                dispatch('selectQuickConfigLevel', Native.QuickConfigLevel_Fast);
+                Native.selectQuickConfigLevel(Native.QuickConfigLevel_Fast);
+                return;
+            }
+            commit('setQuickConfigLevel', parseInt(level));
+            Native.selectQuickConfigLevel(parseInt(level));
+        },
+
         updateStatus({
+            state,
             commit
         }) {
             commit('setHasPermission', Native.hasPermission());
 
             commit('setArcoreSupportStatus', Native.arcoreSupportStatus());
-            commit('setArcoreInstallStatus', Native.arcoreInstallStatus(false));
+            // 支持时检测安装
+            if (state.arcoreSupportStatus == 0 || state.arcoreSupportStatus == 1) {
+                commit('setArcoreInstallStatus', Native.arcoreInstallStatus(false));
+            }
 
             commit('setArengineSupportStatus', Native.hwarengineSupportStatus());
-            commit('setArengineInstallStatus', Native.hwarengineInstallStatus(false));
+
+            if (state.arengineSupportStatus == 0 || state.arengineSupportStatus == 1) {
+                commit('setArengineInstallStatus', Native.hwarengineInstallStatus(false));
+            }
+        },
+
+        checkHasPersission({
+            state,
+            commit
+        }) {
+            commit('setHasPermission', Native.hasPermission());
+            if (state.hasPermission) {
+                Toast("已获得权限");
+            } else {
+                Toast("请授予权限以正常使用AR功能");
+            }
         },
 
         checkArcoreSupport({

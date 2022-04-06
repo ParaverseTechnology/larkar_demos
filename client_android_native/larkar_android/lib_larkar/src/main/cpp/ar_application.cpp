@@ -96,9 +96,6 @@ void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int
 
     ar_manager_->OnDisplayGeometryChanged(displayRotation, width, height);
 
-    lark::XRConfig::use_multiview = false;
-    // 显示参数要跟手机上对应好
-    // 手机刷新率为 60
     lark::XRConfig::fps = 60;
     LOGD("width-height^%d^%d", width_, height_);
     // 分辨率要跟手机上一样
@@ -108,7 +105,7 @@ void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int
 //    lark::XRConfig::render_width = 1280;
 //    lark::XRConfig::render_height = 720;
 
-    lark::XRConfig::QuickConfigWithDefaulSetup(lark::QuickConfigLevel_Fast);
+//    lark::XRConfig::QuickConfigWithDefaulSetup(lark::QuickConfigLevel_Fast);
 
     // setup fov
     glm::mat4 projection = ar_manager_->project_mat();

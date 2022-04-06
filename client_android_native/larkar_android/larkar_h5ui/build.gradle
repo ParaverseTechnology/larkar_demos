@@ -10,7 +10,7 @@ android {
         minSdk 24
         targetSdk 31
         versionCode 1
-        versionName "1.0"
+        versionName "3.2.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +40,28 @@ android {
                     'lib/armeabi-v7a/liblark_xr.so',
                     'lib/arm64-v8a/liblark_xr.so',
             ]
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def build = 1
+            def abi = "all";
+            if (output.filters[0] != null) {
+                abi = output.filters[0].identifier
+            }
+            outputFileName = "lark-ar-native" +
+                    defaultConfig.versionName + "-build-" +
+                    build + "-" + abi + ".apk"
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            universalApk true
         }
     }
 }

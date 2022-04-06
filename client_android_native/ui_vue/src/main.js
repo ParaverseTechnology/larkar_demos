@@ -16,6 +16,7 @@ const mixin = {
             arcoreInstallStatus: state => state.arcoreInstallStatus,
             arengineSupportStatus: state => state.arengineSupportStatus,
             arengineInstallStatus: state => state.arengineInstallStatus,
+            quickConfigLevel: state => state.quickConfigLevel,
         }),
         ...mapGetters({
             isArcoreReady: 'isArcoreReady',
@@ -28,6 +29,7 @@ const mixin = {
             arengineSupportStatusText: 'arengineSupportStatusText',
             arengineInstallStatusText: 'arengineInstallStatusText',
             selectedArSDKString: 'selectedArSDKString',
+            quickConfigLevelString: 'quickConfigLevelString',
         }),
     },
     methods: {
@@ -36,12 +38,15 @@ const mixin = {
             saveHost: 'saveHost',
             restoreHost: 'restoreHost',
             updateStatus: 'updateStatus',
+            checkHasPersission: 'checkHasPersission',
             checkArcoreSupport: 'checkArcoreSupport',
             checkArcoreInstall: 'checkArcoreInstall',
             checkArengineSupport: 'checkArengineSupport',
             checkArengineInstall: 'checkArengineInstall',
             selectARSDK: 'selectARSDK',
             restoreSDKType: 'restoreSDKType',
+            selectQuickConfigLevel: 'selectQuickConfigLevel',
+            restoreQuickConfigLevel: 'restoreQuickConfigLevel',
         }),
     }
 }

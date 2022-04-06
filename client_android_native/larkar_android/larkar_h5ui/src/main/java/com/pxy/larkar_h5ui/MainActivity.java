@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public int arcoreInstallStatus(boolean requireInstall) {
+            Log.d(TAG, "arcoreInstallStatus requireInstall=" + requireInstall);
             // Ensure that Google Play Services for AR and ARCore device profile data are
             // installed and up to date.
             try {
@@ -194,6 +195,19 @@ public class MainActivity extends AppCompatActivity {
             mSelectArSDK = sdkType;
             Log.i(TAG, "selectArSDK " + mSelectArSDK);
             return true;
+        }
+
+        @JavascriptInterface
+        public void selectQuickConfigLevel(int level) {
+            runOnUiThread(() -> {
+                Log.i(TAG, "selectQuickConfigLevel " + level);
+                if (level < 0 || level > 3) {
+                    return;
+                }
+                Config config = Config.readFromCache(MainActivity.this);
+                config.quickConfigLevel = level;
+                Config.saveToCache(MainActivity.this, config);
+            });
         }
     }
 }
