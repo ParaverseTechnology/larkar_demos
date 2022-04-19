@@ -16,14 +16,19 @@
 
 #define LOG_TAG "ArApplication"
 
+#define JSON_COMMAND(type, x, y) "{ type:"#type",x:"#x",y:"#y" }"
+
 namespace {
     const int AR_SDK_TYPE_ARCORE = 1;
     const int AR_SDK_TYPE_HW_ARENGINE = 2;
+
+    const int JSON_COMMAND_TOUCH_DOWN = 1000;
+    const int JSON_COMMAND_TOUCH_MOVE = 1001;
+    const int JSON_COMMAND_TOUCH_UP   = 1002;
 }
 
-ArApplication::ArApplication(jobject j_act, JNIEnv *Env, const std::string& appid, int sdkType):
-    appid_(appid),
-    ar_sdk_type_(sdkType)
+ArApplication::ArApplication(const std::string& appid, int sdkType):
+    appid_(appid)
 {
     LOGD("ArApplication::ArApplication() appid=%s", appid_.c_str());
     if (sdkType == AR_SDK_TYPE_HW_ARENGINE) {
@@ -85,7 +90,6 @@ void ArApplication::OnSurfaceCreated() {
 void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int height) {
     LOGI("WorldArApplication::OnDisplayGeometryChanged(%d, %d)", width, height);
     glViewport(0, 0, width, height);
-    display_rotation_ = displayRotation;
     if (width > height) {
         width_ = width;
         height_ = height;
@@ -124,7 +128,7 @@ void ArApplication::OnDrawFrame() {
 
     bool res = ar_manager_->OnDrawFrame(!ar_manager_->HasChoosenAnchor(), false);
 
-    if (res && ar_manager_->HasChoosenAnchor()) {
+    if (res && ar_manager_->HasChoosenAnchor() && xr_client_->media_ready()) {
         xr_client_->Draw();
     }
 
@@ -169,6 +173,11 @@ void ArApplication::OnTouched(float x, float y, jboolean longtap) {
                         xr_client_->Connect(config);
 #endif
             }
+        }
+
+        // SendTouchDataToDataChannel
+        if (xr_client_->media_ready()) {
+            xr_client_->SendData(JSON_COMMAND(JSON_COMMAND_TOUCH_UP, x, y));
         }
     }
 }
@@ -228,4 +237,9 @@ void ArApplication::OnClose(int code) {
             ArActivity_Error("与渲染服务器代理连接关闭");
             break;
     }
+}
+
+void ArApplication::OnDataChannelOpen() {
+    XRClientObserverWrap::OnDataChannelOpen();
+    LOGI("OnDataChannelOpen");
 }

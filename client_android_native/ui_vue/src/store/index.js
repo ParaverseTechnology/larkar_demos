@@ -169,6 +169,8 @@ export default createStore({
             commit
         }, host) {
             commit('setHost', host);
+            // 去空格
+            host = host.trim();
             localStorage.setItem('host', host);
             try {
                 const url = new URL(host);

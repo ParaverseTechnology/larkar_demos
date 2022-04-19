@@ -13,7 +13,7 @@
 
 class ArApplication: public lark::XRClientObserverWrap {
 public:
-    ArApplication(jobject j_act, JNIEnv *Env, const std::string& appid, int sdkType);
+    ArApplication(const std::string& appid, int sdkType);
     ~ArApplication();
 
     void OnResume(void* env, void* context, void* activity);
@@ -35,12 +35,12 @@ public:
     virtual void OnTrackingFrame(const larkxrTrackingFrame& trackingFrame) override;
     virtual void OnInfo(int infoCode, const std::string& msg) override;
     virtual void OnError(int errCode, const std::string& msg) override;
+    virtual void OnDataChannelOpen() override;
 
     inline void set_rotation_radius(float radius) { rotation_radius_ = radius; };
 
     void SetScaleFactor(float scalefactor);
 private:
-    int display_rotation_ = 0;
     int width_ = 1;
     int height_ = 1;
 
@@ -57,7 +57,7 @@ private:
 
     std::unique_ptr<ArManagerInterface> ar_manager_ = nullptr;
 
-    int ar_sdk_type_;
+    bool support_datachannel_ = false;
 };
 
 

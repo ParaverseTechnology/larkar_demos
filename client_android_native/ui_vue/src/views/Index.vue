@@ -38,7 +38,7 @@
                             <img v-if="item.picUrl" :src="item.picUrl" />
                             <img v-else src="../assets/default-cover.jpg" />
                             <div class="appli-status">
-                                <span>{{item.runCnt}}/{{item.limitMaxFps}}</span>
+                                <span>{{item.runCnt}}/{{item.instanceMax}}</span>
                             </div>
                         </div>
                         <div class="appli-info van-multi-ellipsis--l2">

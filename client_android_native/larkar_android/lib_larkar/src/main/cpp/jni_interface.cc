@@ -110,7 +110,7 @@ Java_com_pxy_liblarkar_JniInterface_createNativeApplication(JNIEnv *env, jclass 
     // save global context
     g_ar_activity_ = env->NewGlobalRef(arActivity);
 
-    auto *app = new ArApplication(arActivity, env, c_appid, sdk_type);
+    auto *app = new ArApplication(c_appid, sdk_type);
 
     env->ReleaseStringUTFChars(appid, c_appid);
     return jptr(app);

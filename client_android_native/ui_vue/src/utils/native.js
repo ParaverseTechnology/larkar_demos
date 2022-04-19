@@ -4,6 +4,9 @@ export default class Native {
     static AR_SDK_TYPE_ARCORE = 1;
     static AR_SDK_TYPE_HW_ARENGINE = 2;
 
+    static QuickConfigLevel_Fast      = 2;
+    static QuickConfigLevel_Normal    = 3;
+    static QuickConfigLevel_Extreme   = 4; 
 
     static showToast(toast) {
         JSBridge?.showToast(toast);
@@ -87,5 +90,16 @@ export default class Native {
             return false;
         }
         return JSBridge?.selectARSDK(type);
+    }
+
+    /**
+     * level
+     * @param {*} level 2 == fast, 3 == normal, 4 == extreme
+     */
+    static selectQuickConfigLevel(level) {
+        if (!JSBridge) {
+            return false;
+        }
+        return JSBridge?.selectQuickConfigLevel(level);
     }
 }

@@ -128,24 +128,6 @@ public class ArActivity extends Activity {
         //连续渲染模式
         mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         mSurfaceView.setWillNotDraw(false);
-
-        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(this);
-        Log.d(TAG, "availablity arcore " + availability.isTransient() + " " + availability.isSupported() + " " + availability.isUnknown());
-
-        try {
-            ArCoreApk.InstallStatus installStatus = ArCoreApk.getInstance().requestInstall(this, false);
-            Log.d(TAG, "availablity arcore install status " + installStatus);
-        } catch (UnavailableDeviceNotCompatibleException e) {
-            e.printStackTrace();
-        } catch (UnavailableUserDeclinedInstallationException e) {
-            e.printStackTrace();
-        }
-
-        AREnginesApk.ARAvailability hw = AREnginesApk.checkAvailability(this);
-        Log.d(TAG, "availablity arengine " + hw.isTransient() + " " + hw.isSupported() + " " + hw.isUnknown());
-        AREnginesApk.ARInstallStatus hwInstall = AREnginesApk.requestInstall(this, false);
-
-        Log.d(TAG, "availablity arengine install status " + hwInstall);
     }
 
     private void initGestureDetector() {
@@ -260,7 +242,7 @@ public class ArActivity extends Activity {
         runOnUiThread(() ->  {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(this)
-                    .setTitle("Error：")
+                    .setTitle("出现错误")
                     .setMessage(err)
                     .setPositiveButton("返回", (dialogInterface, i) -> finish());
 

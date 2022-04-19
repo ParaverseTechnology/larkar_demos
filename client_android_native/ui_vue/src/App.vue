@@ -7,6 +7,7 @@ export default {
   mounted() {
     this.restoreHost();
     this.restoreSDKType();
+    this.restoreQuickConfigLevel();
     this.updateStatus();
     
     console.log('global state', this.Host, this.isARReady, this.hasPermission, this.arcoreSupportStatus, this.selectedArSDKType);

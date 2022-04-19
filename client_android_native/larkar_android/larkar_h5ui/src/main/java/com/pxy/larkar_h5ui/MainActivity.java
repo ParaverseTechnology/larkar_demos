@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);// 支持JS
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //设置缓存
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //设置缓存
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);//支持通过js打开新的窗口
         webSettings.setBuiltInZoomControls(false);// 设置支持缩放
         webSettings.setDomStorageEnabled(true);//使用localStorage则必须打开
