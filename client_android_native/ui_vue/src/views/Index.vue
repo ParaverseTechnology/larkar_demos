@@ -329,6 +329,7 @@ export default {
     margin-bottom: 8px;
     font-size: 14px;
     color: #333;
+    word-break: break-all;
 }
 .appli-item .cover {
     position: relative;

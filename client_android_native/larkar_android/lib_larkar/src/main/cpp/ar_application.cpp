@@ -16,8 +16,6 @@
 
 #define LOG_TAG "ArApplication"
 
-#define JSON_COMMAND(type, x, y) "{ type:"#type",x:"#x",y:"#y" }"
-
 namespace {
     const int AR_SDK_TYPE_ARCORE = 1;
     const int AR_SDK_TYPE_HW_ARENGINE = 2;
@@ -177,7 +175,9 @@ void ArApplication::OnTouched(float x, float y, jboolean longtap) {
 
         // SendTouchDataToDataChannel
         if (xr_client_->media_ready()) {
-            xr_client_->SendData(JSON_COMMAND(JSON_COMMAND_TOUCH_UP, x, y));
+            char buff[50];
+            sprintf(buff, "{ type: %d, x: %f, y: %f }", JSON_COMMAND_TOUCH_UP, x, y);
+            xr_client_->SendData(buff);
         }
     }
 }
