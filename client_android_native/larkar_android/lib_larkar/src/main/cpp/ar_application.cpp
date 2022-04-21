@@ -1,8 +1,6 @@
 //
 // Created by Hayasi-Yumito on 2021/12/14.
 //
-
-
 #include <util.h>
 #include <EGL/egl.h>
 #include <android/native_window_jni.h>
@@ -68,16 +66,13 @@ void ArApplication::OnPause() {
 }
 
 void ArApplication::OnSurfaceCreated() {
-    LOGI("WorldArApplication::OnSurfaceCreated()");
-    ar_manager_->OnSurfaceCreated();
     LOGD("ArApplication::InitXr()");
+
+    ar_manager_->OnSurfaceCreated();
     xr_client_ = std::make_shared<lark::XRClient>();
     xr_client_->Init(nullptr);
     xr_client_->RegisterObserver(this);
-    LOGD("url %s:%hu", lark::XRClient::GetServerHost().c_str(), lark::XRClient::GetServerPort());
-    // xr_client_->SetServerAddr(lark::XRClient::GetServerHost(), lark::XRClient::GetServerPort());
-//     xr_client_->SetServerAddr("192.168.0.161", 8181);
-//     xr_client_->SetServerAddr("192.168.0.55", 8181);
+
 //    xr_client_->SetServerAddr("192.168.0.177", 8181);
 
     if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
@@ -103,11 +98,6 @@ void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int
     // 分辨率要跟手机上一样
     lark::XRConfig::render_width = width_;
     lark::XRConfig::render_height = height_;
-
-//    lark::XRConfig::render_width = 1280;
-//    lark::XRConfig::render_height = 720;
-
-//    lark::XRConfig::QuickConfigWithDefaulSetup(lark::QuickConfigLevel_Fast);
 
     // setup fov
     glm::mat4 projection = ar_manager_->project_mat();

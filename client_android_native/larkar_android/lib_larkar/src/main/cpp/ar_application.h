@@ -9,7 +9,10 @@
 #include "ar_manager_interface.h"
 
 // SETUP SDKID
-#define LARK_SDK_ID "29b8347a75cc44898fc312e177a857af"
+//#define LARK_SDK_ID ""
+#ifndef LARK_SDK_ID
+#error "请配置SDK ID. 如果没有请联系商务获取. https://www.pingxingyun.com/index.html"
+#endif
 
 class ArApplication: public lark::XRClientObserverWrap {
 public:
