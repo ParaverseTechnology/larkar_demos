@@ -31,7 +31,10 @@ public class Controller : MonoBehaviour
         // start connect
         lark.DataChannelNativeApi.ApiRestult restult = lark.LarkManager.Instance.StartConnect();
 
-        Debug.Log("Connect Result " + restult); ;
+        Debug.Log("Connect Result " + restult);
+
+        // var testCmd = new JsonCmd(JsonCmd.CmdType.TOUCH_UP, 1.0001f, 2.0001f);
+        // Debug.Log("test cmd " + testCmd.ToJson() + " " + testCmd.ToJson().Length);
     }
 
 
@@ -58,6 +61,7 @@ public class Controller : MonoBehaviour
     #region trigger
     void RandomTrigger()
     {
+        Debug.Log("RandomTrigger");
         string[] triggers = { "walk", "fly", "run", "idel" };
         Trigger(triggers[UnityEngine.Random.Range(0, triggers.Length)]);
     }
@@ -114,6 +118,7 @@ public class Controller : MonoBehaviour
 
         public JsonCmd(CmdType type, float x, float y)
         {
+            this.type = type;
             this.x = x;
             this.y = y;
         }

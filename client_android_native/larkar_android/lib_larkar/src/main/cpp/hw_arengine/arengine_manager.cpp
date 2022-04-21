@@ -217,8 +217,7 @@ bool ArEngineManager::HitTest(float x, float y) {
     if (arHitResult) {
         // Note that the app should release the anchor_ pointer after using it.
         // Call ArAnchor_release(anchor_) to release the anchor_.
-        if (HwArHitResult_acquireNewAnchor(ar_session_, arHitResult, &anchor_) !=
-            HWAR_SUCCESS) {
+        if (HwArHitResult_acquireNewAnchor(ar_session_, arHitResult, &anchor_) != HWAR_SUCCESS) {
             LOGE("HitTest ArHitResult_acquireNewAnchor error");
             return false;
         }

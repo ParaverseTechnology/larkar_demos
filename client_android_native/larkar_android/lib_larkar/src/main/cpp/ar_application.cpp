@@ -175,8 +175,8 @@ void ArApplication::OnTouched(float x, float y, jboolean longtap) {
 
         // SendTouchDataToDataChannel
         if (xr_client_->media_ready()) {
-            char buff[50];
-            sprintf(buff, "{ type: %d, x: %f, y: %f }", JSON_COMMAND_TOUCH_UP, x, y);
+            char buff[100];
+            sprintf(buff, R"({ "type": %d, "x": %f, "y": %f })", JSON_COMMAND_TOUCH_UP, x, y);
             xr_client_->SendData(buff);
         }
     }
