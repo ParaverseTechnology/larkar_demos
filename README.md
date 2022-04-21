@@ -22,7 +22,7 @@ Unity3D 示例和 Unreal 示例为上图右边 XR App 接入 OpenVR 的示例应
 
 在 LarkXR Server 中上传部署的 XR APP 要选择 `AR(平行云AR方案)`
 
-## [AR Android 客户端](./client_android_native/larkar_android/)
+## [AR Android 客户端](./client_android_native/)
 
 * 接入 [google arcore](https://developers.google.com/ar), 支持 arcore 支持的机型
 * 接入 [huawei arengine sdk](https://developer.huawei.com/consumer/cn/hms/huawei-arengine/)。 支持 huawei arengine sdk 支持的机型
@@ -45,3 +45,4 @@ Unity3D 示例和 Unreal 示例为上图右边 XR App 接入 OpenVR 的示例应
 * 云端应用启用 OpenVR
 
 接入具体文档见[./cloudapp_unreal/README.md](./cloudapp_unreal/README.md)
+
