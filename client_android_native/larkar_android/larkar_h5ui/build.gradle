@@ -10,7 +10,7 @@ android {
         minSdk 24
         targetSdk 31
         versionCode 1
-        versionName "3.2.1.1"
+        versionName "3.2.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,6 +39,8 @@ android {
                     'lib/arm64-v8a/libhuawei_arengine_ndk.so',
                     'lib/armeabi-v7a/liblark_xr.so',
                     'lib/arm64-v8a/liblark_xr.so',
+                    'lib/armeabi-v7a/liblark_common.so',
+                    'lib/arm64-v8a/liblark_common.so',
             ]
         }
     }

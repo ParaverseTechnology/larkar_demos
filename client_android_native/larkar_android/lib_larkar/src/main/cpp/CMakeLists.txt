@@ -18,6 +18,10 @@ add_library(lib_lark_xr SHARED IMPORTED)
 set_target_properties(lib_lark_xr PROPERTIES IMPORTED_LOCATION
         ${ARENGINE_LIBPATH}/${ANDROID_ABI}/liblark_xr.so)
 
+add_library(lib_lark_common SHARED IMPORTED)
+set_target_properties(lib_lark_common PROPERTIES IMPORTED_LOCATION
+        ${ARENGINE_LIBPATH}/${ANDROID_ABI}/liblark_common.so)
+
 # source files
 set(src_files
         ar_application.cpp
@@ -77,4 +81,5 @@ target_link_libraries( # Specifies the target library.
         huawei_arengine_ndk
         # pxy larkxr sdk
         lib_lark_xr
+        lib_lark_common
 )

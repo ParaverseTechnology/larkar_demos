@@ -89,7 +89,7 @@ task extractNativeLibrariesArEngine() {
                     from zipTree(f)
                     into jni_libpath
                     // "jni/**/liblark_xr.so"
-                    include ("jni/include/**/*", "jni/**/liblark_xr.so")
+                    include ("jni/include/**/*", "jni/**/liblark_xr.so", "jni/**/liblark_common.so")
                 }
             } else {
                 copy {

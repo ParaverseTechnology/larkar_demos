@@ -21,6 +21,40 @@ namespace {
     const int JSON_COMMAND_TOUCH_DOWN = 1000;
     const int JSON_COMMAND_TOUCH_MOVE = 1001;
     const int JSON_COMMAND_TOUCH_UP   = 1002;
+
+    static inline uint64_t GetTimestampUs() {
+        timeval tv;
+        gettimeofday(&tv, nullptr);
+
+        uint64_t Current = (uint64_t)tv.tv_sec * 1000 * 1000 + tv.tv_usec;
+        return Current;
+    }
+
+    static inline double GetTimeInSeconds()
+    {
+        struct timespec now;
+        clock_gettime( CLOCK_MONOTONIC, &now );
+        return ( now.tv_sec * 1e9 + now.tv_nsec ) * 0.000000001;
+    }
+
+    inline std::string GetTimestampMillStr() {
+        uint64_t ms = GetTimestampUs() * 1000;
+        return std::to_string(ms);
+    }
+
+#ifdef LARK_SDK_SECRET
+    inline static std::string GetSignature(const std::string& appkey, const std::string& secret, const std::string& utc_millseconds)
+    {
+        // digestToHex
+        return lark::GetSignature(appkey, secret, utc_millseconds);
+    }
+#else
+    inline static std::string GetSignature(const std::string& appkey, const std::string& secret, const std::string& utc_millseconds)
+    {
+        // digestToHex
+        return "";
+    }
+#endif
 }
 
 ArApplication::ArApplication(const std::string& appid, int sdkType):
@@ -73,11 +107,19 @@ void ArApplication::OnSurfaceCreated() {
     xr_client_->Init(nullptr);
     xr_client_->RegisterObserver(this);
 
-//    xr_client_->SetServerAddr("192.168.0.177", 8181);
-
-    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
-        LOGE("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+#ifdef LARK_SDK_SECRET
+    // 初始化 cloudlark sdk
+    std::string timestamp = GetTimestampMillStr();
+    std::string signature = GetSignature(LARK_SDK_ID, LARK_SDK_SECRET, timestamp);
+    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID, signature, timestamp)) {
+        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
     }
+#else
+    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
+                        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+                        Navigation::ShowToast(xr_client_->last_error_message());
+                    }
+#endif
 }
 
 void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int height) {
