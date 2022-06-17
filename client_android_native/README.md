@@ -1,22 +1,22 @@
-# LarkAR 客户端接入Demo
+# [LarkAR 客户端接入Demo](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native)
 
 ## 简介
 
 主要分为两部分
 
-* VUE H5 做的列表页 UI, 对应 [ui_vue](./ui_vue/) 和 [./larkar_android/larkar_h5ui](./larkar_android/larkar_h5ui/)
-* Android 原生接入 AR 流程,对应 [./larkar_android/lib_larkar/](./larkar_android/lib_larkar/)
+* VUE H5 做的列表页 UI, 对应 [ui_vue](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/ui_vue/) 和 [./larkar_android/larkar_h5ui](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/larkar_h5ui/)
+* Android 原生接入 AR 流程,对应 [./larkar_android/lib_larkar/](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/)
 
 其中 lib_larkar:
 * 接入 [google arcore](https://developers.google.com/ar), 支持 arcore 支持的机型
 * 接入 [huawei arengine sdk](https://developer.huawei.com/consumer/cn/hms/huawei-arengine/)。 支持 huawei arengine sdk 支持的机型
-* 云渲染接入 [LarkXR SDK](./client_android_native/larkar_android/lib_larkar/libs/larkxr-kit-3.2.1.0-build-1.aar)
+* 云渲染接入 [LarkXR SDK](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/libs)
 
 ## 如何使用
 
 ### 编译
 
-Android Studio 打开 [./larkar_android/](./larkar_android/),首次编译应先执行 lib_larkar 的build 或 clean 任务，将自动解压原生 so 库等。
+Android Studio 打开 [./larkar_android/](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/),首次编译应先执行 lib_larkar 的build 或 clean 任务，将自动解压原生 so 库等。
 
 ![build or clean](./doc/1.png)
 
@@ -48,7 +48,7 @@ Android Studio 打开 [./larkar_android/](./larkar_android/),首次编译应先�
 
 ## 使用 LarkXR SDK 接入云渲染
 
-在 [./larkar_android/lib_larkar/libs/larkxr-kit-3.2.1.0-build-1.aa ](./larkar_android/lib_larkar/libs/larkxr-kit-3.2.1.0-build-1.aar) 可以找到 LarkXR SDK，LarkXR SDK 主要提供 C++ 接口。
+在 [**projectroot**/lib_larkar/libs/larkxr-kit-**.aar](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/libs) 可以找到 LarkXR SDK，LarkXR SDK 主要提供 C++ 接口。 如何在 ndk 原生项目中使用 larkxr-kit-**.aar 获得 .h 和 .so 文件请参考 [**projectroot**/lib_larkar] 该模块的配置
 
 ### LarkXR SDK 主要流程都在 lark::XRClient 类中，以下列出示例中的关键代码
 
@@ -107,18 +107,17 @@ void ArApplication::RequestTrackingInfo() {
 
 Demo 中集成了 ARCore 和 Huawei AREngine，封装为统一的 AR 功能接口
 
-* 接口 [ar_manager_interface.h](./larkar_android/lib_larkar/src/main/cpp/ar_manager_interface.h)
-* arcore 实现[arcore](./larkar_android/lib_larkar/src/main/cpp/arcore/)
-* huawei arengine 实现[hw_arengine](./larkar_android/lib_larkar/src/main/cpp/hw_arengine/)
+* 接口 [ar_manager_interface.h](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/src/main/cpp/ar_manager_interface.h)
+* arcore 实现[arcore](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/src/main/cpp/arcore/)
+* huawei arengine 实现[hw_arengine](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/lib_larkar/src/main/cpp/hw_arengine/)
 
 ## 开启 CloudXR 支持
 
 1. 在云雀服务端上传应用类型未 CloudXR AR 类型的应用
-2. 在将 CloudXR.aar 放到 [/client_android_native/larkar_android/libs/](/client_android_native/larkar_android/libs/) 文件夹下
+2. 在将 CloudXR.aar 放到 [/client_android_native/larkar_android/libs/](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/libs/) 文件夹下
 3. 将 [/client_android_native/larkar_android/config.gradle] BUILD_WITH_CLOUDXR_SUPPORT 这种为 ture，重新编译
 
 ## 修改 H5 UI
 
-参考 [ui_vue](./ui_vue/) 中的源码修改 UI.
-H5 UI 和 Android 原生交互部分参考 [MainActivity.java](./larkar_android/larkar_h5ui/src/main/java/com/pxy/larkar_h5ui/MainActivity.java)
-
+参考 [ui_vue](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/ui_vue/) 中的源码修改 UI.
+H5 UI 和 Android 原生交互部分参考 [MainActivity.java](https://github.com/pingxingyun/larkar_demos/tree/main/client_android_native/larkar_android/larkar_h5ui/src/main/java/com/pxy/larkar_h5ui/MainActivity.java)

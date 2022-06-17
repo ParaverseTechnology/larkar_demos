@@ -14,9 +14,9 @@
 
 ## Demo Scene
 
-[SampleScene.unity](./ar_dragon/Assets/Scenes/SampleScene.unity) 演示在 AR 场景中添加一个带动画的模型。
+[SampleScene.unity](https://github.com/pingxingyun/larkar_demos/tree/main/cloudapp_unity/ar_dragon/Assets/Scenes/SampleScene.unity) 演示在 AR 场景中添加一个带动画的模型。
 
-动画模型控制由[Controller.cs](./ar_dragon/Assets/Scenes/Controller.cs)脚本完成。
+动画模型控制由[Controller.cs](https://github.com/pingxingyun/larkar_demos/tree/main/cloudapp_unity/ar_dragon/Assets/Scenes/Controller.cs)脚本完成。
 
 该场景也载入了 LarkXR DataChannel 插件，演示从客户端收到自定义数据，并执行相应动作。
 
