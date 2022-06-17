@@ -26,7 +26,8 @@ Unity3D 示例和 Unreal 示例为上图右边 XR App 接入 OpenVR 的示例应
 
 * 接入 [google arcore](https://developers.google.com/ar), 支持 arcore 支持的机型
 * 接入 [huawei arengine sdk](https://developer.huawei.com/consumer/cn/hms/huawei-arengine/)。 支持 huawei arengine sdk 支持的机型
-* 云渲染接入 [LarkXR SDK](./client_android_native/larkar_android/lib_larkar/libs/larkxr-kit-3.2.1.0-build-1.aar)
+* 云渲染接入 [LarkXR SDK](./client_android_native/larkar_android/lib_larkar/libs/larkxr-kit-3.2.2.0-build-1.aar)
+* 可选开启支持 CloudXR， 开启方式见 [CloudXR](./client_android_native/) 
 
 接入具体文档见[./client_android_native/README.md](./client_android_native/README.md)
 

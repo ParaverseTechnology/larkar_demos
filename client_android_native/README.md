@@ -20,6 +20,8 @@ Android Studio 打开 [./larkar_android/](./larkar_android/),首次编译应先�
 
 ![build or clean](./doc/1.png)
 
+> 如果编译过程中出现找不到库的情况，请重新编译一次
+
 ### 运行
 
 填入 LarkXR 的SDK ID，可以在 https://www.pingxingyun.com/console/#/ 或者联系商务部门申请
@@ -109,7 +111,14 @@ Demo 中集成了 ARCore 和 Huawei AREngine，封装为统一的 AR 功能接�
 * arcore 实现[arcore](./larkar_android/lib_larkar/src/main/cpp/arcore/)
 * huawei arengine 实现[hw_arengine](./larkar_android/lib_larkar/src/main/cpp/hw_arengine/)
 
+## 开启 CloudXR 支持
+
+1. 在云雀服务端上传应用类型未 CloudXR AR 类型的应用
+2. 在将 CloudXR.aar 放到 [/client_android_native/larkar_android/libs/](/client_android_native/larkar_android/libs/) 文件夹下
+3. 将 [/client_android_native/larkar_android/config.gradle] BUILD_WITH_CLOUDXR_SUPPORT 这种为 ture，重新编译
+
 ## 修改 H5 UI
 
 参考 [ui_vue](./ui_vue/) 中的源码修改 UI.
 H5 UI 和 Android 原生交互部分参考 [MainActivity.java](./larkar_android/larkar_h5ui/src/main/java/com/pxy/larkar_h5ui/MainActivity.java)
+
