@@ -56,7 +56,7 @@ android {
             if (output.filters[0] != null) {
                 abi = output.filters[0].identifier
             }
-            outputFileName = "lark-ar-native" +
+            outputFileName = "lark-ar-native-" +
                     defaultConfig.versionName + "-build-" +
                     build + "-" + abi + ".apk"
         }

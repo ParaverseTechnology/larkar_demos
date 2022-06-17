@@ -73,6 +73,26 @@
 #endif
 
 namespace gWorldAr {
+    static inline uint64_t GetTimestampUs() {
+        timeval tv;
+        gettimeofday(&tv, nullptr);
+
+        uint64_t Current = (uint64_t)tv.tv_sec * 1000 * 1000 + tv.tv_usec;
+        return Current;
+    }
+
+    static inline double GetTimeInSeconds()
+    {
+        struct timespec now;
+        clock_gettime( CLOCK_MONOTONIC, &now );
+        return ( now.tv_sec * 1e9 + now.tv_nsec ) * 0.000000001;
+    }
+
+    inline std::string GetTimestampMillStr() {
+        uint64_t ms = GetTimestampUs() * 1000;
+        return std::to_string(ms);
+    }
+
     // Utilities for C hello AR project.
     namespace util {
         class Util {

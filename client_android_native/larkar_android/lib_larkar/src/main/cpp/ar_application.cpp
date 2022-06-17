@@ -13,6 +13,7 @@
 #include "jni_interface.h"
 #include "arcore/arcore_manager.h"
 #include "hw_arengine/arengine_manager.h"
+#include "lark_xr/pxy_inner_utils.h"
 
 #define LOG_TAG "ArApplication"
 
@@ -90,9 +91,18 @@ void ArApplication::OnSurfaceCreated() {
 //     xr_client_->SetServerAddr("192.168.0.55", 8181);
 //    xr_client_->SetServerAddr("192.168.0.177", 8181);
 
-    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
-        LOGE("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+#ifdef LARK_SDK_SECRET
+    // 初始化 cloudlark sdk
+    std::string timestamp = gWorldAr::GetTimestampMillStr();
+    std::string signature = lark::GetSignature(LARK_SDK_ID, LARK_SDK_SECRET, timestamp);
+    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID, signature, timestamp)) {
+        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
     }
+#else
+    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
+        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+    }
+#endif
 
 #ifdef ENABLE_CLOUDXR
     cloudxr_client_ = std::make_unique<CloudXRClient>(this);

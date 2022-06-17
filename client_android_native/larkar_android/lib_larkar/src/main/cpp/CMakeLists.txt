@@ -100,6 +100,7 @@ target_link_libraries( # Specifies the target library.
         huawei_arengine_ndk
         # pxy larkxr sdk
         lib_lark_xr
+        lib_lark_common
 )
 
 if (ENABLE_CLOUDXR STREQUAL "1")
