@@ -209,5 +209,10 @@ public class MainActivity extends AppCompatActivity {
                 Config.saveToCache(MainActivity.this, config);
             });
         }
+
+        @JavascriptInterface
+        public boolean enableCloudXR() {
+            return ArActivity.ENABLE_CLOUDXR;
+        }
     }
 }

@@ -38,7 +38,10 @@ public class PermissionManager {
 
     private static final int MAX_ARRAYS = 10;
 
-    private static final String[] PERMISSIONS_ARRAYS = new String[]{Manifest.permission.CAMERA};
+    private static final String[] PERMISSIONS_ARRAYS = new String[]{
+            Manifest.permission.CAMERA,
+            Manifest.permission.INTERNET,
+    };
 
     private PermissionManager() {
     }

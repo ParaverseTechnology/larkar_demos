@@ -53,6 +53,11 @@ import java.io.IOException;
 public class JniInterface {
   static {
     System.loadLibrary("larkar");
+    // cloud xr sdk use JNI_OnLoad to get java vm;
+    // muse load lib to trigger JNI_Onload
+    if (BuildConfig.ENABLE_CLOUDXR) {
+      System.loadLibrary("CloudXRClient");
+    }
   }
 
   private static final String TAG = "JniInterface";
@@ -75,7 +80,7 @@ public class JniInterface {
     mAssetManager = tassetManager;
   }
 
-  public static native long createNativeApplication(ArActivity arActivity,String appid, int sdkType);
+  public static native long createNativeApplication(ArActivity arActivity, String appid, int sdkType);
 
   public static native void onResume(long nativeApplication, Context context, Activity activity);
 

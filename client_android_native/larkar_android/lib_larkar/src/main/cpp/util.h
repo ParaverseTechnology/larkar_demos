@@ -33,7 +33,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "huawei_arengine_interface.h"
-#include "ar_application.h"
 
 #ifdef  __ANDROID__
 

@@ -30,6 +30,8 @@ public:
     virtual bool ReleaseChoosenAnchor() = 0;
     virtual bool HasChoosenAnchor() = 0;
     virtual bool GetRawAnchorPose(glm::mat4& anchorPose) = 0;
+    // fps config
+    virtual bool Set60FPS() = 0;
 
     inline const glm::mat4& raw_anchor_mat() const { return raw_anchor_mat_; };
     inline const glm::mat4& view_mat() const { return view_mat_; };

@@ -328,3 +328,8 @@ bool ArEngineManager::GetRawAnchorPose(glm::mat4 &anchorPose) {
     return true;
 }
 
+bool ArEngineManager::Set60FPS() {
+    // TODO check hw support 60 fps
+    return false;
+}
+

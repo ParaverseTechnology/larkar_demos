@@ -1,7 +1,6 @@
 package com.pxy.liblarkar;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +14,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.google.ar.core.ArCoreApk;
-import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
-import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
-import com.huawei.hiar.AREnginesApk;
 import com.pxy.cloudlarkxrkit.XrSystem;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -26,17 +21,17 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ArActivity extends Activity {
     private static final String TAG = ArActivity.class.getSimpleName();
+    private static final double ROTATE_ANG_VEC = Math.PI / 100.0f;
+
 
     public static final int AR_SDK_TYPE_ARCORE = 1;
     public static final int AR_SDK_TYPE_HW_ARENGINE = 2;
 
-    private static final double ROTATE_ANG_VEC = Math.PI / 100.0f;
+    public static final boolean ENABLE_CLOUDXR = BuildConfig.ENABLE_CLOUDXR;
 
     private GLSurfaceView mSurfaceView;
 
     private DisplayRotationManager mDisplayRotationManager;
-
-    private boolean isRemindInstall = false;
 
     // lark xr system
     private XrSystem mXrSystem = null;
@@ -90,7 +85,7 @@ public class ArActivity extends Activity {
         //设置暂停时保留EGL上下文
         mSurfaceView.setPreserveEGLContextOnPause(true);
         //设置EGL上下文客户端版本
-        mSurfaceView.setEGLContextClientVersion(2);
+        mSurfaceView.setEGLContextClientVersion(3);
         //设置EGL配置选择器，包括颜色缓冲区的位数和深度位数。
         mSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 
@@ -197,6 +192,7 @@ public class ArActivity extends Activity {
         mSurfaceView.onResume();
         // Listen to display changed events to detect 180 rotation, which does not cause config change or view resize.
         mDisplayRotationManager.registerDisplayListener();
+        mXrSystem.onResume();
     }
 
     @Override
@@ -213,6 +209,7 @@ public class ArActivity extends Activity {
         JniInterface.onPause(mNativeApplication);
         mDisplayRotationManager.unregisterDisplayListener();
         mSurfaceView.onPause();
+        mXrSystem.onPause();
     }
 
     @Override

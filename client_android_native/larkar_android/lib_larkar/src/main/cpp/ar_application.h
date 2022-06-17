@@ -8,10 +8,23 @@
 #include "lark_xr/xr_client.h"
 #include "ar_manager_interface.h"
 
-// SETUP SDKID
-#define LARK_SDK_ID "29b8347a75cc44898fc312e177a857af"
+#ifdef ENABLE_CLOUDXR
+#include "cloudxr_client.h"
+#endif
 
-class ArApplication: public lark::XRClientObserverWrap {
+// SETUP SDKID
+//#define LARK_SDK_ID "SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+#ifndef LARK_SDK_ID
+// 请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释
+#error "请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+#endif
+
+class ArApplication:
+        public lark::XRClientObserverWrap
+#ifdef ENABLE_CLOUDXR
+    ,public CloudXRClientObserver
+#endif
+{
 public:
     ArApplication(const std::string& appid, int sdkType);
     ~ArApplication();
@@ -29,6 +42,7 @@ public:
     void OnTouched(float x, float y,jboolean longtap);
 
     // hw decoder callback textrue.
+    virtual void OnCloudXRReady(const std::string& appServerIp, const std::string& perferOutIp) override;
     virtual void OnConnected() override;
     virtual void OnClose(int code) override;
     virtual void RequestTrackingInfo() override;
@@ -36,6 +50,13 @@ public:
     virtual void OnInfo(int infoCode, const std::string& msg) override;
     virtual void OnError(int errCode, const std::string& msg) override;
     virtual void OnDataChannelOpen() override;
+
+#ifdef ENABLE_CLOUDXR
+    // cloudxr callback
+    virtual void UpdateClientState(cxrClientState state, cxrStateReason reason) override;
+    virtual void ReceiveUserData(const void* data, uint32_t size) override;
+    virtual void GetTrackingState(glm::mat4* post_matrix) override;
+#endif
 
     inline void set_rotation_radius(float radius) { rotation_radius_ = radius; };
 
@@ -58,6 +79,12 @@ private:
     std::unique_ptr<ArManagerInterface> ar_manager_ = nullptr;
 
     bool support_datachannel_ = false;
+
+#ifdef ENABLE_CLOUDXR
+    std::unique_ptr<CloudXRClient> cloudxr_client_ = nullptr;
+    std::string prepare_public_ip_ = "";
+    bool need_reconnect_public_ip_ = false;
+#endif
 };
 
 

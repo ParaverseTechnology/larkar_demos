@@ -32,9 +32,11 @@
                         :data-instanceMax="item.instanceMax"
                     >
                         <div class="cover">
-                            <div v-if="item.appliType == 9" class="appli-type">
+                            <div v-if="item.appliType == 9 || item.appliType == 11" class="appli-type">
                                 <img src="../assets/icon-ar.png" alt="">
+                                <span v-if="item.appliType == 11">CloudXR</span>
                             </div>
+                            
                             <img v-if="item.picUrl" :src="item.picUrl" />
                             <img v-else src="../assets/default-cover.jpg" />
                             <div class="appli-status">
@@ -42,6 +44,9 @@
                             </div>
                         </div>
                         <div class="appli-info van-multi-ellipsis--l2">
+                            <div v-if="item.appliType == 13" class="appli-type">
+                                <span v-if="item.appliType == 13">PixelStreaming</span>
+                            </div>
                             <div>{{item.appliName}}</div>
                         </div>
                         <!-- <img src="../assets/arrow-right.png" class='icon-right' mode="aspectFill" /> -->
@@ -69,7 +74,7 @@ export default {
             curretnAppliType: "",
             category: [
                 { text: '全部', value: "" },
-                { text: 'PXYAR', value: 9 },
+                { text: 'AR', value: "AR" },
                 { text: 'SR', value: 'SIM' },
             ],
             region: {
@@ -193,25 +198,35 @@ export default {
             const instanceMax = event.currentTarget.dataset.instancemax;
 
             console.log("on enter appli", appliId, appliType, this.region, event.currentTarget.dataset, instanceMax);
-            if (appliType == 9) {
+            // AR type
+            if (appliType == 9 || appliType == 11) {
+                if (!Native.enableCloudXR() && appliType == 11) {
+                    Toast("当前原生编译库未支持CloudXR.");
+                    return;
+                }
                 if (!this.isARReady) {
                     Toast("AR环境未准备好，当前只支持SR应用");
                     return;
                 }
                 console.log("enter ar app");
-                Fetch.Get("/taskInfo/getRunningCnt", {appliId})
-                .then((res) => {
-                    console.log('getRunningCnt ', parseInt(res.total), instanceMax);
-                    if (parseInt(res.total) <= instanceMax) {
-                        Native.enterAppli(appliId);
-                    } else {
-                        Native.showToast("渲染实例不足");
-                    }
-                })
-                .catch((e) => {
-                    console.warn('getRunningCnt failed', e);
-                })
-            } else if (appliType == 2 || appliType == 1 || appliType == 13) {
+
+                Native.enterAppli(appliId);
+
+                // Fetch.Get("taskInfo/getRunningCnt", {appliId})
+                // .then((res) => {
+                //     console.log('getRunningCnt ', parseInt(res.total), instanceMax);
+                //     if (parseInt(res.total) <= instanceMax) {
+                //         Native.enterAppli(appliId);
+                //     } else {
+                //         Toast("渲染实例不足");
+                //     }
+                // })
+                // .catch((e) => {
+                //     console.warn('getRunningCnt failed', e);
+                //     Toast(JSON.stringify(e));
+                // })
+            } else if (appliType == 2 || appliType == 1 || appliType == 13) { 
+                // SR type
                 console.log("enter ar app");
                 Fetch.Get("appli/getStartInfo", {
                     appliId,
@@ -226,6 +241,7 @@ export default {
                 })
                 .catch((e) => {
                     console.log("on enter appli failed ", e);
+                    Toast(JSON.stringify(e));
                 });
             } else {
                 console.log("ar app type not support");
@@ -237,7 +253,6 @@ export default {
             console.log('on toggle region list', this.showRegionList, this.regionClass);
         },
         onChangeRegion(event) {
-            // regionId: BJ
             const index = event.currentTarget.dataset.index;
             this.region = this.regionList[index];
             this.showRegionList = !this.showRegionList;
@@ -346,7 +361,12 @@ export default {
     position: absolute;
     top: 5px;
     left: 8px;
-    width: 30px;
+    color: #fff;
+    font-size: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 .appli-item .appli-status {
     position: absolute;
@@ -361,8 +381,9 @@ export default {
     margin-right: 5px;
 }
 .appli-item .appli-type img {
-    width: 100%;
+    width: 30px;
     height: auto;
+    margin-right: 5px;
 }
 .appli-item .icon-right {
     width: 20px;

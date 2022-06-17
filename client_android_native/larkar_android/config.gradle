@@ -1,0 +1,13 @@
+ext {
+    // build configs
+
+    //
+    // WARNING
+    // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir
+    BUILD_WITH_CLOUDXR_SUPPORT = false;
+
+    MIN_SDK_VERSION = 25;
+    TARGET_SDK_VERSION = 31;
+    COMPLITE_VERSION = 31;
+    NDK_VERSION = "21.4.7075529";
+}

@@ -102,4 +102,14 @@ export default class Native {
         }
         return JSBridge?.selectQuickConfigLevel(level);
     }
+
+    /**
+     * return is cloudxr enabled
+     */
+    static enableCloudXR() {
+        if (!JSBridge) {
+            return false;
+        }
+        return JSBridge?.enableCloudXR();
+    }
 }

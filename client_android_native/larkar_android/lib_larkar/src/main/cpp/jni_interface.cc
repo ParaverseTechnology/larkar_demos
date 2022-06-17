@@ -6,6 +6,7 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <jni.h>
+#include <sys/mman.h>
 
 #include "ar_application.h"
 
@@ -105,6 +106,8 @@ JNIEXPORT jlong JNICALL
 Java_com_pxy_liblarkar_JniInterface_createNativeApplication(JNIEnv *env, jclass clazz,
                                                               jobject arActivity,jstring appid,
                                                             jint sdk_type) {
+//    mprotect(2);
+
     const char *c_appid = env->GetStringUTFChars(appid, 0);
 
     // save global context

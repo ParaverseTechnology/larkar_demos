@@ -412,3 +412,37 @@ void ArcoreManager::UpdateLight() {
     ArLightEstimate_destroy(ar_light_estimate);
     ar_light_estimate = nullptr;
 }
+
+bool ArcoreManager::Set60FPS() {
+    if (!ar_session_) {
+        LOGE("set arcore fps without ar session");
+        return false;
+    }
+    // Retrieve supported camera configs.
+    ArCameraConfigList* all_camera_configs = nullptr;
+    int32_t num_configs = 0;
+    ArCameraConfigList_create(ar_session_, &all_camera_configs);
+    // Create filter first to get both 30 and 60 fps.
+    ArCameraConfigFilter* camera_config_filter = nullptr;
+    ArCameraConfigFilter_create(ar_session_, &camera_config_filter);
+    ArCameraConfigFilter_setTargetFps(
+            ar_session_, camera_config_filter,
+            AR_CAMERA_CONFIG_TARGET_FPS_60);
+    ArSession_getSupportedCameraConfigsWithFilter(
+            ar_session_, camera_config_filter, all_camera_configs);
+    ArCameraConfigList_getSize(ar_session_, all_camera_configs, &num_configs);
+
+    if (num_configs < 1) {
+        LOGW("No 60Hz camera available!  Setting to 30fps.");
+        return false;
+    } else {
+        ArCameraConfig* camera_config;
+        ArCameraConfig_create(ar_session_, &camera_config);
+        ArCameraConfigList_getItem(ar_session_, all_camera_configs, 0,
+                                   camera_config);
+
+        ArSession_setCameraConfig(ar_session_, camera_config);
+    }
+    LOGI("set 60hz camera success.");
+    return true;
+}

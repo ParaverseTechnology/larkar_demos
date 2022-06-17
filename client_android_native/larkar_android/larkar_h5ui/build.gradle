@@ -2,15 +2,17 @@ plugins {
     id 'com.android.application'
 }
 
+apply from:"${project.rootDir}/config.gradle"
+
 android {
-    compileSdk 31
+    compileSdk COMPLITE_VERSION
 
     defaultConfig {
         applicationId "com.pxy.larkar_h5ui"
-        minSdk 24
-        targetSdk 31
+        minSdk MIN_SDK_VERSION
+        targetSdk TARGET_SDK_VERSION
         versionCode 1
-        versionName "3.2.1.1"
+        versionName "3.2.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,7 +26,7 @@ android {
 
     repositories {
         flatDir {
-            dirs '../lib_larkar/libs'
+            dirs '../lib_larkar/libs', "${project.rootDir}/libs"
         }
     }
 
@@ -39,6 +41,10 @@ android {
                     'lib/arm64-v8a/libhuawei_arengine_ndk.so',
                     'lib/armeabi-v7a/liblark_xr.so',
                     'lib/arm64-v8a/liblark_xr.so',
+                    'lib/armeabi-v7a/liblark_common.so',
+                    'lib/arm64-v8a/liblark_common.so',
+                    'lib/armeabi-v7a/libCloudXRClient.so',
+                    'lib/arm64-v8a/libCloudXRClient.so',
             ]
         }
     }
@@ -79,5 +85,11 @@ dependencies {
 
     implementation 'com.huawei.hms:arenginesdk:3.7.0.3'
     implementation 'com.google.ar:core:1.30.0'
-    implementation(name: 'larkxr-kit-3.2.1.0-build-1', ext: 'aar')
+    implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
+
+    // WARNING
+    // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir
+    if (BUILD_WITH_CLOUDXR_SUPPORT) {
+        implementation(name: 'CloudXR', ext: 'aar')
+    }
 }

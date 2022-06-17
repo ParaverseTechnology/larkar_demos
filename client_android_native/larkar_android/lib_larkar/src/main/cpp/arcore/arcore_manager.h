@@ -31,6 +31,8 @@ public:
     virtual bool HitTest(float x, float y) override;
     virtual bool ReleaseChoosenAnchor() override;
     virtual bool HasChoosenAnchor() override;
+    // fps config
+    virtual bool Set60FPS() override;
 
     virtual bool GetRawAnchorPose(glm::mat4& anchorPose);
 private:
