@@ -2,3 +2,4 @@ rootProject.name = "LarkAR"
 
 include ':larkar_h5ui'
 include ':lib_larkar'
+include ':lib_larkvr'

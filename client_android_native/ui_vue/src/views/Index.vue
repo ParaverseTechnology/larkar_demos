@@ -33,8 +33,12 @@
                     >
                         <div class="cover">
                             <div v-if="item.appliType == 9 || item.appliType == 11" class="appli-type">
-                                <img src="../assets/icon-ar.png" alt="">
+                                <img src="../assets/icon-ar.png" alt="" />
                                 <span v-if="item.appliType == 11">CloudXR</span>
+                            </div>
+                            <div v-else-if="item.appliType == 6 || item.appliType == 5 || item.appliType == 3" class="appli-type">
+                                <img src="../assets/icon-vr.png" alt="" />
+                                <span v-if="item.appliType == 6">CloudXR</span>
                             </div>
                             
                             <img v-if="item.picUrl" :src="item.picUrl" />
@@ -76,6 +80,7 @@ export default {
                 { text: '全部', value: "" },
                 { text: 'AR', value: "AR" },
                 { text: 'SR', value: 'SIM' },
+                { text: 'VR', value: 'VR' },
             ],
             region: {
                 delay: 9999,
@@ -210,21 +215,21 @@ export default {
                 }
                 console.log("enter ar app");
 
-                Native.enterAppli(appliId);
+                // Native.enterAppli(appliId, false);
 
-                // Fetch.Get("taskInfo/getRunningCnt", {appliId})
-                // .then((res) => {
-                //     console.log('getRunningCnt ', parseInt(res.total), instanceMax);
-                //     if (parseInt(res.total) <= instanceMax) {
-                //         Native.enterAppli(appliId);
-                //     } else {
-                //         Toast("渲染实例不足");
-                //     }
-                // })
-                // .catch((e) => {
-                //     console.warn('getRunningCnt failed', e);
-                //     Toast(JSON.stringify(e));
-                // })
+                Fetch.Get("taskInfo/getRunningCnt", {appliId})
+                .then((res) => {
+                    console.log('getRunningCnt ', parseInt(res.total), instanceMax);
+                    if (parseInt(res.total) <= instanceMax) {
+                        Native.enterAppli(appliId, false);
+                    } else {
+                        Toast("渲染实例不足");
+                    }
+                })
+                .catch((e) => {
+                    console.warn('getRunningCnt failed', e);
+                    Toast(JSON.stringify(e));
+                })
             } else if (appliType == 2 || appliType == 1 || appliType == 13) { 
                 // SR type
                 console.log("enter ar app");
@@ -243,6 +248,21 @@ export default {
                     console.log("on enter appli failed ", e);
                     Toast(JSON.stringify(e));
                 });
+            } else if (appliType == 3 || appliType == 5 || appliType == 6) {
+                // VR type
+                Fetch.Get("taskInfo/getRunningCnt", {appliId})
+                .then((res) => {
+                    console.log('getRunningCnt ', parseInt(res.total), instanceMax);
+                    if (parseInt(res.total) <= instanceMax) {
+                        Native.enterAppli(appliId, true);
+                    } else {
+                        Toast("渲染实例不足");
+                    }
+                })
+                .catch((e) => {
+                    console.warn('getRunningCnt failed', e);
+                    Toast(JSON.stringify(e));
+                })
             } else {
                 console.log("ar app type not support");
                 Toast("Unsupport appli type " + appliType);

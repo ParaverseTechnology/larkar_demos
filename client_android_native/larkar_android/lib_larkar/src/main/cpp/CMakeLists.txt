@@ -77,6 +77,7 @@ target_include_directories(lib_larkar PRIVATE
         # lib xr
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${ARENGINE_LIBPATH}/include/
+        ${GLM_LIBPATH}
 )
 
 find_library( # Sets the name of the path variable.

@@ -12,7 +12,7 @@ android {
         minSdk MIN_SDK_VERSION
         targetSdk TARGET_SDK_VERSION
         versionCode 1
-        versionName "3.2.2.0"
+        versionName "3.2.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,6 +45,8 @@ android {
                     'lib/arm64-v8a/liblark_common.so',
                     'lib/armeabi-v7a/libCloudXRClient.so',
                     'lib/arm64-v8a/libCloudXRClient.so',
+                    'lib/arm64-v8a/libGfxPluginCardboard.so',
+                    'lib/armeabi-v7a/libGfxPluginCardboard.so',
             ]
         }
     }
@@ -66,7 +68,7 @@ android {
         abi {
             enable true
             reset()
-            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+            include 'armeabi-v7a', 'arm64-v8a'
             universalApk true
         }
     }
@@ -82,6 +84,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(":lib_larkar")
+    implementation project(":lib_larkvr")
 
     implementation 'com.huawei.hms:arenginesdk:3.7.0.3'
     implementation 'com.google.ar:core:1.30.0'

@@ -17,6 +17,7 @@ import com.huawei.hiar.AREnginesApk;
 import com.pxy.cloudlarkxrkit.Config;
 import com.pxy.liblarkar.ArActivity;
 import com.pxy.liblarkar.PermissionManager;
+import com.pxy.liblarkvr.VrActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,12 +86,18 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         @JavascriptInterface
-        public void enterAppli(String appid) {
+        public void enterAppli(String appid, boolean isVR) {
             runOnUiThread(() -> {
-                Intent intent = new Intent(MainActivity.this, ArActivity.class);
-                intent.putExtra("appid", appid);
-                intent.putExtra("arSDK", mSelectArSDK);
-                startActivity(intent);
+                if (isVR) {
+                    Intent intent = new Intent(MainActivity.this, VrActivity.class);
+                    intent.putExtra("appid", appid);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, ArActivity.class);
+                    intent.putExtra("appid", appid);
+                    intent.putExtra("arSDK", mSelectArSDK);
+                    startActivity(intent);
+                }
             });
         }
         @JavascriptInterface

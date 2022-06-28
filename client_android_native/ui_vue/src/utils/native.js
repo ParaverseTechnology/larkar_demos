@@ -12,8 +12,11 @@ export default class Native {
         JSBridge?.showToast(toast);
     }
 
-    static enterAppli(appid) {
-        JSBridge?.enterAppli(appid);
+    // enter appli to ar/vr activity
+    // @param appid
+    // @param isVR isVR applitype jump to vr acvitiy or ar activity
+    static enterAppli(appid, isVR) {
+        JSBridge?.enterAppli(appid, isVR);
     }
 
     static onSaveServerAddress(ip, port) {

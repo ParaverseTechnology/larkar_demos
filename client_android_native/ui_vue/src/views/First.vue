@@ -157,7 +157,7 @@ export default {
             this.updateStatus();
 
             if (!this.isARReady) {
-                Dialog({ message: '没有找到可用的 AR SDK 环境，当前只支持SR应用。' })
+                Dialog({ message: '没有找到可用的 AR SDK 环境，当前只支持SR/VR应用。' })
                 .then(() => {
                     this.active++;
                     this.$router.replace("/");    

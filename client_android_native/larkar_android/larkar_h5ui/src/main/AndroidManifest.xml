@@ -10,6 +10,8 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.LarkAR">
+
+        <!--   h5 ui list activity     -->
         <activity
             android:screenOrientation="portrait"
             android:name=".MainActivity"
@@ -47,6 +49,20 @@
             <meta-data
                 android:name="hwc-theme"
                 android:value="androidhwext:style/Theme.Emui" />
+        </activity>
+
+
+        <!--   cardboard vr activity     -->
+        <activity
+            android:name="com.pxy.liblarkvr.VrActivity"
+            android:label="@string/title_activity_vr"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="landscape"
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 

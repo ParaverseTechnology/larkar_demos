@@ -134,10 +134,6 @@ void ArApplication::OnDisplayGeometryChanged(int displayRotation, int width, int
     glm::mat4 projection = ar_manager_->project_mat();
     lark::XRConfig::SetupFovWithProjectMatrix(LARKXR_EYE_LEFT, glm::value_ptr(projection));
     lark::XRConfig::SetupFovWithProjectMatrix(LARKXR_EYE_RIGHT, glm::value_ptr(projection));
-    fov_w_ = lark::XRConfig::fov[0].left + lark::XRConfig::fov[0].right;
-    fov_h_ = lark::XRConfig::fov[0].top + lark::XRConfig::fov[0].bottom;
-    LOGI("default getFov w=%f h=%f", fov_w_, fov_h_);
-
 
 #ifdef ENABLE_CLOUDXR
     cloudxr_client_->SetStreamRes(width, height, displayRotation);
@@ -304,7 +300,7 @@ void ArApplication::SetScaleFactor(float scale) {
 }
 
 void ArApplication::OnTrackingFrame(const larkxrTrackingFrame &trackingFrame) {
-    trackingFrame_=trackingFrame;
+    trackingFrame_ = trackingFrame;
 }
 
 void ArApplication::RequestTrackingInfo() {
@@ -357,7 +353,7 @@ void ArApplication::OnCloudXRReady(const std::string &appServerIp, const std::st
     cloudxr_client_->Connect(appServerIp);
 //    cloudxr_client_->Connect("192.168.0.50");
 #else
-    LOGI("MUST ENABLE CLOUDXR AND PUT CloudXR SDK under projectroot/libs folder.");
+    LOGE("MUST ENABLE CLOUDXR AND PUT CloudXR SDK under projectroot/libs folder.");
 #endif
 }
 

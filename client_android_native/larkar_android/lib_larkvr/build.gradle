@@ -21,11 +21,11 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-frtti -fexceptions -std=c++1y -DANDROID_NDK_BUILD=1"
-                targets 'lib_larkar'
+                targets 'lib_larkvr'
 
                 if (BUILD_WITH_CLOUDXR_SUPPORT) {
                     arguments "-DANDROID_STL=c++_shared",
-                            "-DARENGINE_LIBPATH=${jni_libpath}/jni",
+                            "-DLIBPATH=${jni_libpath}/jni",
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
                             "-DCLOUDXR_LIBPATH=${project.rootDir}/libs/CloudXR/jni",
                             "-DCLOUDXR_INCLUDE=${project.rootDir}/libs/CloudXR/include",
@@ -33,7 +33,7 @@ android {
                 } else {
                     arguments "-DANDROID_STL=c++_shared",
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
-                            "-DARENGINE_LIBPATH=${jni_libpath}/jni"
+                            "-DLIBPATH=${jni_libpath}/jni"
                 }
             }
             ndk {
@@ -57,11 +57,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
@@ -69,48 +64,43 @@ android {
         }
     }
 
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
 repositories {
     flatDir {
-        dirs "${project.rootDir}/libs"
+        dirs "${project.rootDir}/libs", "${project.rootDir}/lib_larkar/libs"
     }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    // Android Mobile Vision
+    // TODO(b/213613345) Migrate to ML Kit.
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+    // TODO(b/219489509): Update to 1.5.0 once b/218868656 is fixed.
     implementation 'com.google.android.material:material:1.4.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    // hw arsdk
-    implementation 'com.huawei.hms:arenginesdk:3.7.0.3'
-    natives 'com.huawei.hms:arenginesdk:3.7.0.3'
-
-    // ARCore library
-    implementation 'com.google.ar:core:1.30.0'
-    natives 'com.google.ar:core:1.30.0'
+    implementation 'com.google.protobuf:protobuf-javalite:3.19.4'
 
     // larkxr sdk
     implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
     natives(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
 
-    // WARNING
-    // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir
-    if (BUILD_WITH_CLOUDXR_SUPPORT) {
-        implementation(name: 'CloudXR', ext: 'aar')
-    }
+    // cardboard sdk
+    implementation(name: 'cardboard-sdk-release-1.16', ext: 'aar')
+    natives(name: 'cardboard-sdk-release-1.16', ext: 'aar')
 }
 
-// Extracts the shared libraries from aars in the natives configuration.
-// This is done so that NDK builds can access these libraries.
-task extractNativeLibrariesArEngine() {
+task extractNativeLibraries() {
     outputs.upToDateWhen { false }
     doFirst {
         configurations.natives.files.each { f ->
@@ -132,10 +122,9 @@ task extractNativeLibrariesArEngine() {
     }
 }
 
-
 tasks.whenTaskAdded {
     task-> if (task.name.contains("external") && !task.name.contains("Clean")) {
-        task.dependsOn(extractNativeLibrariesArEngine)
+        task.dependsOn(extractNativeLibraries)
     }
 }
 
