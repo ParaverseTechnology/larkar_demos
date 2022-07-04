@@ -194,8 +194,8 @@ void HelloCardboardApp::OnSurfaceCreated(JNIEnv* env) {
   xr_client_->RegisterObserver(this);
   LOGD("url %s:%hu", lark::XRClient::GetServerHost().c_str(), lark::XRClient::GetServerPort());
 
-//  xr_client_->SetServerAddr(lark::XRClient::GetServerHost(), lark::XRClient::GetServerPort());
-     xr_client_->SetServerAddr("192.168.0.55", 8181);
+  xr_client_->SetServerAddr(lark::XRClient::GetServerHost(), lark::XRClient::GetServerPort());
+//     xr_client_->SetServerAddr("192.168.0.55", 8181);
 //     xr_client_->SetServerAddr("192.168.0.55", 8181);
 //    xr_client_->SetServerAddr("192.168.0.177", 8181);
 
@@ -373,7 +373,7 @@ void HelloCardboardApp::OnResume() {
   CardboardQrCode_getSavedDeviceParams(&buffer, &size);
   if (size == 0) {
     // TODO switch view when setup. not 3d activity.
-    //    SwitchViewer();
+    SwitchViewer();
   }
   CardboardQrCode_destroy(buffer);
 }
