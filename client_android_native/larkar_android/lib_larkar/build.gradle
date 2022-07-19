@@ -29,11 +29,15 @@ android {
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
                             "-DCLOUDXR_LIBPATH=${project.rootDir}/libs/CloudXR/jni",
                             "-DCLOUDXR_INCLUDE=${project.rootDir}/libs/CloudXR/include",
+                            "-DOBOE_LIBPATH=${project.rootDir}/libs/Oboe/jni",
+                            "-DOBOE_INCLUDE=${project.rootDir}/libs/Oboe/include",
                             "-DENABLE_CLOUDXR=1"
                 } else {
                     arguments "-DANDROID_STL=c++_shared",
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
-                            "-DARENGINE_LIBPATH=${jni_libpath}/jni"
+                            "-DARENGINE_LIBPATH=${jni_libpath}/jni",
+                            "-DOBOE_LIBPATH=${project.rootDir}/libs/Oboe/jni",
+                            "-DOBOE_INCLUDE=${project.rootDir}/libs/Oboe/include"
                 }
             }
             ndk {
@@ -101,6 +105,8 @@ dependencies {
     implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
     natives(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
 
+    implementation(name: 'oboe-1.6.1', ext: 'aar')
+
     // WARNING
     // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir
     if (BUILD_WITH_CLOUDXR_SUPPORT) {
@@ -138,6 +144,8 @@ tasks.whenTaskAdded {
         task.dependsOn(extractNativeLibrariesArEngine)
     }
 }
+
+preBuild.dependsOn(':extractOboe')
 
 // WARNING
 // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir

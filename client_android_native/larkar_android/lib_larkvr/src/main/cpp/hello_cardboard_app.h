@@ -30,6 +30,7 @@
 #include "util.h"
 
 #include "lark_xr/xr_client.h"
+#include "oboe/Oboe.h"
 
 #ifdef ENABLE_CLOUDXR
 #include "cloudxr_client.h"
@@ -37,8 +38,8 @@
 
 //#define LARK_SDK_ID "如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #ifndef LARK_SDK_ID
-// 请将 SDK ID 填入第 38 行 LARK_SDK_ID 中，并放开第 38 行注释
-#error "请将 SDK ID 填入第 38 行 LARK_SDK_ID 中，并放开第 18 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+// 请将 SDK ID 填入第 39 行 LARK_SDK_ID 中，并放开第 39 行注释
+#error "请将 SDK ID 填入第 39 行 LARK_SDK_ID 中，并放开第 39 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #endif
 
 namespace ndk_hello_cardboard {
@@ -49,6 +50,7 @@ namespace ndk_hello_cardboard {
  */
 class HelloCardboardApp :
         public lark::XRClientObserverWrap
+        , public oboe::AudioStreamDataCallback
 #ifdef ENABLE_CLOUDXR
         ,public CloudXRClientObserver
 #endif
@@ -180,6 +182,12 @@ class HelloCardboardApp :
     virtual void OnInfo(int infoCode, const std::string& msg) override;
     virtual void OnError(int errCode, const std::string& msg) override;
     virtual void OnDataChannelOpen() override;
+    // update server 3.2.5.0
+    virtual void RequestAudioInput() override;
+
+    // AudioStreamDataCallback interface
+    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream,
+                                          void *audioData, int32_t numFrames) override;
 
 #ifdef ENABLE_CLOUDXR
         // cloudxr callback
@@ -263,7 +271,6 @@ private:
   std::vector<Texture> target_object_selected_textures_;
   int cur_target_object_;
 
-
   // java activity callback
   JavaVM* vm_;
   jobject activity_;
@@ -272,6 +279,8 @@ private:
   std::string appid_;
   std::shared_ptr<lark::XRClient> xr_client_ = nullptr;
   larkxrTrackingFrame trackingFrame_;
+
+  std::shared_ptr<oboe::AudioStream> recording_stream_{};
 #ifdef ENABLE_CLOUDXR
         std::unique_ptr<CloudXRClient> cloudxr_client_ = nullptr;
         std::string prepare_public_ip_ = "";

@@ -29,11 +29,15 @@ android {
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
                             "-DCLOUDXR_LIBPATH=${project.rootDir}/libs/CloudXR/jni",
                             "-DCLOUDXR_INCLUDE=${project.rootDir}/libs/CloudXR/include",
+                            "-DOBOE_LIBPATH=${project.rootDir}/libs/Oboe/jni",
+                            "-DOBOE_INCLUDE=${project.rootDir}/libs/Oboe/include",
                             "-DENABLE_CLOUDXR=1"
                 } else {
                     arguments "-DANDROID_STL=c++_shared",
                             "-DGLM_LIBPATH=${project.rootDir}/libs/",
-                            "-DLIBPATH=${jni_libpath}/jni"
+                            "-DLIBPATH=${jni_libpath}/jni",
+                            "-DOBOE_LIBPATH=${project.rootDir}/libs/Oboe/jni",
+                            "-DOBOE_INCLUDE=${project.rootDir}/libs/Oboe/include"
                 }
             }
             ndk {
@@ -98,6 +102,8 @@ dependencies {
     // cardboard sdk
     implementation(name: 'cardboard-sdk-release-1.16', ext: 'aar')
     natives(name: 'cardboard-sdk-release-1.16', ext: 'aar')
+
+    implementation(name: 'oboe-1.6.1', ext: 'aar')
 }
 
 task extractNativeLibraries() {
@@ -127,6 +133,8 @@ tasks.whenTaskAdded {
         task.dependsOn(extractNativeLibraries)
     }
 }
+
+preBuild.dependsOn(':extractOboe')
 
 // WARNING
 // enable cloudxr support must put your CloudXR.aar under larkar_android/libs dir

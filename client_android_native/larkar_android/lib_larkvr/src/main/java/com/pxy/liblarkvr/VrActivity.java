@@ -64,6 +64,7 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
   private static final String TAG = VrActivity.class.getSimpleName();
 
   // Permission request codes
+  private static final int PERMISSIONS_REQUEST_CODE_AUDIO_RECODE = 0;
   private static final int PERMISSIONS_REQUEST_CODE = 2;
 
   // Opaque native pointer to the native CardboardApp instance.
@@ -79,6 +80,10 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
   @Override
   public void onCreate(Bundle savedInstance) {
     super.onCreate(savedInstance);
+
+    if (!isRecordPermissionGranted()){
+      requestRecordPermission();
+    }
 
     String appid = getIntent().getStringExtra("appid");
     Log.d(TAG, "on create " + appid);
@@ -224,6 +229,18 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
   private void requestPermissions() {
     final String[] permissions = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE};
     ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_REQUEST_CODE);
+  }
+
+  private boolean isRecordPermissionGranted() {
+    return (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED);
+  }
+
+  private void requestRecordPermission() {
+    ActivityCompat.requestPermissions(
+            this,
+            new String[]{Manifest.permission.RECORD_AUDIO},
+            PERMISSIONS_REQUEST_CODE_AUDIO_RECODE);
   }
 
   /**

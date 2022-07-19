@@ -269,6 +269,7 @@ export default createStore({
                 Toast("已获得权限");
             } else {
                 Toast("请授予权限以正常使用AR功能");
+                Native.checkPermission();
             }
         },
 

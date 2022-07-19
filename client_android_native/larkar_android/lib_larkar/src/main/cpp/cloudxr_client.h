@@ -13,7 +13,7 @@
 #include "CloudXRMatrixHelpers.h"
 #endif
 #include "util.h"
-
+#include <oboe/Oboe.h>
 
 class CloudXRLaunchOptions : public CloudXR::ClientOptions {
 public:
@@ -30,7 +30,7 @@ public:
     virtual void GetTrackingState(glm::mat4* post_matrix) = 0;
 };
 
-class CloudXRClient {
+class CloudXRClient: public oboe::AudioStreamDataCallback {
 public:
     CloudXRClient(CloudXRClientObserver* ob);
     ~CloudXRClient();
@@ -63,6 +63,10 @@ public:
     void SetStreamRes(uint32_t w, uint32_t h, uint32_t orientation);
     // Send a touch event along to the server/host application
     void HandleTouch(float x, float y);
+
+    /// AudioStreamDataCallback interface
+    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream,
+                                          void *audioData, int32_t numFrames) override;
 
     inline bool IsRunning() const { return cloudxr_receiver_; };
 
@@ -117,6 +121,9 @@ private:
     cxrClientState client_state_ = cxrClientState_ReadyToConnect;
 
     CloudXRClientObserver* ob_;
+
+    std::shared_ptr<oboe::AudioStream> recording_stream_ = nullptr;
+    std::shared_ptr<oboe::AudioStream> playback_stream_ = nullptr;
 };
 
 

@@ -18,6 +18,13 @@ add_library(cardboard SHARED IMPORTED)
 set_target_properties(cardboard PROPERTIES IMPORTED_LOCATION
         ${LIBPATH}/${ANDROID_ABI}/libGfxPluginCardboard.so)
 
+# Import Oboe
+add_library(oboe-lib SHARED IMPORTED)
+set_target_properties(oboe-lib PROPERTIES IMPORTED_LOCATION
+        ${OBOE_LIBPATH}/${ANDROID_ABI}/liboboe.so
+        )
+include_directories(${OBOE_INCLUDE})
+
 # larkxr sdk
 add_library(lib_lark_xr SHARED IMPORTED)
 set_target_properties(lib_lark_xr PROPERTIES IMPORTED_LOCATION
@@ -46,13 +53,13 @@ set(src_files
         hello_cardboard_jni.cc
         hello_cardboard_app.h
         hello_cardboard_app.cc
-        cloudxr_client.h
-        cloudxr_client.cpp
+#        cloudxr_client.h
+#        cloudxr_client.cpp
 )
 
 if (ENABLE_CLOUDXR STREQUAL "1")
-#    list(APPEND src_files cloudxr_client.h)
-#    list(APPEND src_files cloudxr_client.cpp)
+    list(APPEND src_files cloudxr_client.h)
+    list(APPEND src_files cloudxr_client.cpp)
 endif()
 
 add_definitions(-D_GLM_ENABLE_EXPERIMENTAL)
@@ -96,6 +103,8 @@ target_link_libraries( # Specifies the target library.
         # pxy larkxr sdk
         lib_lark_xr
         lib_lark_common
+        #oboe
+        oboe-lib
 )
 
 if (ENABLE_CLOUDXR STREQUAL "1")

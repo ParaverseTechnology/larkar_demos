@@ -41,7 +41,7 @@
                                 <span v-if="item.appliType == 6">CloudXR</span>
                             </div>
                             
-                            <img v-if="item.picUrl" :src="item.picUrl" />
+                            <img v-if="item.picUrl" :src="Host + item.picUrl" />
                             <img v-else src="../assets/default-cover.jpg" />
                             <div class="appli-status">
                                 <span>{{item.runCnt}}/{{item.instanceMax}}</span>
@@ -75,9 +75,9 @@ export default {
     name: 'Index',
     data() {
         return {
-            curretnAppliType: "",
+            curretnAppliType: "All",
             category: [
-                { text: '全部', value: "" },
+                { text: '全部', value: "All" },
                 { text: 'AR', value: "AR" },
                 { text: 'SR', value: 'SIM' },
                 { text: 'VR', value: 'VR' },
@@ -203,6 +203,27 @@ export default {
             const instanceMax = event.currentTarget.dataset.instancemax;
 
             console.log("on enter appli", appliId, appliType, this.region, event.currentTarget.dataset, instanceMax);
+
+            // SR(独占型)
+            // DESKTOP = 1,
+            // SR(共享型-平行云通用方案)
+            // SHARED = 2,
+            // SR(共享型-UE像素流送方案)
+            // PIXEL_STREAMING = 13,
+            // VR(SteamVR)
+            // VR = 3,
+            //不能多开
+            // SteamVR:依赖Steam)
+            // VR_STEAM = 5,
+            // VR(Nvidia)
+            // NV_VR = 6,
+            // VR(OpenXR)
+            // XR = 7,
+            // AR(PXY)
+            // PXY_AR = 9,
+            // AR(Nvidia)
+            // NV_AR = 11,
+
             // AR type
             if (appliType == 9 || appliType == 11) {
                 if (!Native.enableCloudXR() && appliType == 11) {
@@ -248,7 +269,7 @@ export default {
                     console.log("on enter appli failed ", e);
                     Toast(JSON.stringify(e));
                 });
-            } else if (appliType == 3 || appliType == 5 || appliType == 6) {
+            } else if (appliType == 3 || appliType == 5 || appliType == 6 || appliType == 7) {
                 // VR type
                 Fetch.Get("taskInfo/getRunningCnt", {appliId})
                 .then((res) => {

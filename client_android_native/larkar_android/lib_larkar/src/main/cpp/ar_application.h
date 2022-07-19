@@ -7,20 +7,20 @@
 
 #include "lark_xr/xr_client.h"
 #include "ar_manager_interface.h"
+#include "oboe/Oboe.h"
 
 #ifdef ENABLE_CLOUDXR
 #include "cloudxr_client.h"
 #endif
 
-
 //#define LARK_SDK_ID "如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
-#ifndef LARK_SDK_ID
 // 请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释
 #error "请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #endif
 
 class ArApplication:
         public lark::XRClientObserverWrap
+        , public oboe::AudioStreamDataCallback
 #ifdef ENABLE_CLOUDXR
     ,public CloudXRClientObserver
 #endif
@@ -50,6 +50,12 @@ public:
     virtual void OnInfo(int infoCode, const std::string& msg) override;
     virtual void OnError(int errCode, const std::string& msg) override;
     virtual void OnDataChannelOpen() override;
+    // update server 3.2.5.0
+    virtual void RequestAudioInput() override;
+
+    // AudioStreamDataCallback interface
+    oboe::DataCallbackResult onAudioReady(oboe::AudioStream *oboeStream,
+                                          void *audioData, int32_t numFrames) override;
 
 #ifdef ENABLE_CLOUDXR
     // cloudxr callback
@@ -80,6 +86,7 @@ private:
 
     bool support_datachannel_ = false;
 
+    std::shared_ptr<oboe::AudioStream> recording_stream_{};
 #ifdef ENABLE_CLOUDXR
     std::unique_ptr<CloudXRClient> cloudxr_client_ = nullptr;
     std::string prepare_public_ip_ = "";

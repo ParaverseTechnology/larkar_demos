@@ -65,8 +65,17 @@ void CloudXRClient::GetTrackingState(cxrVRTrackingState *state) {
 }
 
 cxrBool CloudXRClient::RenderAudio(const cxrAudioFrame *audioFrame) {
-    // TODO add oboe
-    return 0;
+    if (!playback_stream_)
+    {
+        return cxrFalse;
+    }
+
+    const uint32_t timeout = audioFrame->streamSizeBytes / CXR_AUDIO_BYTES_PER_MS;
+    const uint32_t numFrames = timeout * CXR_AUDIO_SAMPLING_RATE / 1000;
+    playback_stream_->write(audioFrame->streamBuffer, numFrames,
+                            timeout * oboe::kNanosPerMillisecond);
+
+    return cxrTrue;
 }
 
 void CloudXRClient::ReceiveUserData(const void* data, uint32_t size) {
@@ -92,7 +101,7 @@ cxrDeviceDesc CloudXRClient::GetDeviceDesc() {
     device_desc_.fps = static_cast<float>(fps_);
     device_desc_.ipd = 0.064f;
     device_desc_.predOffset = 0.02f;
-    // TODO ADD Audio Support
+    // TODO audio
     device_desc_.receiveAudio = false;
     device_desc_.sendAudio = false;
 //    device_desc_.receiveAudio = launch_options_.mReceiveAudio;
@@ -159,6 +168,63 @@ bool CloudXRClient::Init() {
         reinterpret_cast<CloudXRClient*>(context)->UpdateClientState(state, reason);
     };
 
+    if (device_desc.receiveAudio) {
+        // Initialize audio playback
+        oboe::AudioStreamBuilder playbackStreamBuilder;
+        playbackStreamBuilder.setDirection(oboe::Direction::Output);
+        playbackStreamBuilder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+        playbackStreamBuilder.setSharingMode(oboe::SharingMode::Exclusive);
+        playbackStreamBuilder.setFormat(oboe::AudioFormat::I16);
+        playbackStreamBuilder.setChannelCount(oboe::ChannelCount::Stereo);
+        playbackStreamBuilder.setSampleRate(CXR_AUDIO_SAMPLING_RATE);
+
+        oboe::Result r = playbackStreamBuilder.openStream(playback_stream_);
+        if (r != oboe::Result::OK) {
+            LOGE("Failed to open playback stream. Error: %s", oboe::convertToText(r));
+            return cxrError_Failed;
+        }
+
+        int bufferSizeFrames = playback_stream_->getFramesPerBurst() * 2;
+        r = playback_stream_->setBufferSizeInFrames(bufferSizeFrames);
+        r = playback_stream_->setBufferSizeInFrames(bufferSizeFrames);
+        if (r != oboe::Result::OK) {
+            LOGE("Failed to set playback stream buffer size to: %d. Error: %s",
+                 bufferSizeFrames, oboe::convertToText(r));
+            return cxrError_Failed;
+        }
+
+        r = playback_stream_->start();
+        if (r != oboe::Result::OK) {
+            LOGE("Failed to start playback stream. Error: %s", oboe::convertToText(r));
+            return cxrError_Failed;
+        }
+    }
+
+    if (device_desc.sendAudio) {
+        // Initialize audio recording
+        oboe::AudioStreamBuilder recordingStreamBuilder;
+        recordingStreamBuilder.setDirection(oboe::Direction::Input);
+        recordingStreamBuilder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+        recordingStreamBuilder.setSharingMode(oboe::SharingMode::Exclusive);
+        recordingStreamBuilder.setFormat(oboe::AudioFormat::I16);
+        recordingStreamBuilder.setChannelCount(oboe::ChannelCount::Stereo);
+        recordingStreamBuilder.setSampleRate(CXR_AUDIO_SAMPLING_RATE);
+        recordingStreamBuilder.setInputPreset(oboe::InputPreset::VoiceCommunication);
+        recordingStreamBuilder.setDataCallback(this);
+
+        oboe::Result r = recordingStreamBuilder.openStream(recording_stream_);
+        if (r != oboe::Result::OK) {
+            LOGE("Failed to open recording stream. Error: %s", oboe::convertToText(r));
+            return cxrError_Failed;
+        }
+
+        r = recording_stream_->start();
+        if (r != oboe::Result::OK) {
+            LOGE("Failed to start recording stream. Error: %s", oboe::convertToText(r));
+            return cxrError_Failed;
+        }
+    }
+
     LOGI("Audio support: receive [%s], send [%s]", device_desc.receiveAudio?"on":"off", device_desc.sendAudio?"on":"off");
 
     cxrReceiverDesc desc = { 0 };
@@ -169,7 +235,8 @@ bool CloudXRClient::Init() {
     desc.shareContext = &context;
     desc.numStreams = CXR_NUM_VIDEO_STREAMS_XR;
     desc.receiverMode = cxrStreamingMode_XR;
-    desc.debugFlags = launch_options_.mDebugFlags;
+    // TODO rgb or srgb
+    desc.debugFlags = cxrDebugFlags_OutputLinearRGBColor;
     desc.logMaxSizeKB = CLOUDXR_LOG_MAX_DEFAULT;
     desc.logMaxAgeDays = CLOUDXR_LOG_MAX_DEFAULT;
     cxrError err = cxrCreateReceiver(&desc, &cloudxr_receiver_);
@@ -432,6 +499,16 @@ void CloudXRClient::SetPoseMatrix(const glm::mat4 &pose_mat) {
 }
 
 void CloudXRClient::Teardown() {
+    if (playback_stream_) {
+        playback_stream_->close();
+        playback_stream_ = nullptr;
+    }
+
+    if (recording_stream_) {
+        recording_stream_->close();
+        recording_stream_ = nullptr;
+    }
+
     if (cloudxr_receiver_) {
         LOGI("Tearing down CloudXR...");
         cxrDestroyReceiver(cloudxr_receiver_);
@@ -439,3 +516,17 @@ void CloudXRClient::Teardown() {
     }
 }
 
+oboe::DataCallbackResult
+CloudXRClient::onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int32_t numFrames) {
+    if (cloudxr_receiver_ && IsConnect()) {
+        cxrAudioFrame recordedFrame{};
+        recordedFrame.streamBuffer = (int16_t *) audioData;
+        recordedFrame.streamSizeBytes =
+                numFrames * CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE;
+        cxrSendAudio(cloudxr_receiver_, &recordedFrame);
+
+        return oboe::DataCallbackResult::Continue;
+    } else {
+        return oboe::DataCallbackResult::Continue;
+    }
+}

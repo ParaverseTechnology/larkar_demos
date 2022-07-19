@@ -78,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
         PermissionManager.checkPermission(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     class JsBridge {
         @JavascriptInterface
         public void showToast(String msg) {

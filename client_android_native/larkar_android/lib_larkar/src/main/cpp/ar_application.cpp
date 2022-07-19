@@ -49,6 +49,11 @@ ArApplication::~ArApplication() {
     }
 #endif
 
+    if (recording_stream_) {
+        recording_stream_->close();
+        recording_stream_.reset();
+    }
+
     if (xr_client_) {
         xr_client_->Close();
         xr_client_->OnDestory();
@@ -61,6 +66,8 @@ ArApplication::~ArApplication() {
 
     ar_manager_->OnDestory();
     ar_manager_ = nullptr;
+
+    LOGD("lark_DestroyDemo finish");
 };
 
 void ArApplication::OnResume(void *env, void *context, void *activity) {
@@ -327,6 +334,11 @@ void ArApplication::OnConnected() {
 
 void ArApplication::OnClose(int code) {
     LOGI("on xr client OnClose %d", code );
+    if (recording_stream_) {
+        recording_stream_->close();
+        recording_stream_.reset();
+    }
+
     switch(code) {
         case LK_XR_MEDIA_TRANSPORT_CHANNEL_CLOSED:
             ArActivity_Error("与服务器媒体传输通道连接关闭");
@@ -406,6 +418,67 @@ void ArApplication::GetTrackingState(glm::mat4 *post_matrix) {
     base_frame = glm::rotate(base_frame, -rotation_radius_, glm::vec3(0, 1, 0));
     // Setup pose matrix with our base frame
     *post_matrix = base_frame * glm::inverse(ar_manager_->view_mat());
+}
+
+oboe::DataCallbackResult
+ArApplication::onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int32_t numFrames) {
+    //    LOGV("onAudioReady %d", numFrames);
+    if (!xr_client_ || !xr_client_->is_connected()) {
+        LOGV("skip on audio ready %d", numFrames);
+        return oboe::DataCallbackResult::Continue;
+    }
+    int streamSizeBytes = numFrames * CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE;
+
+//    LOGV("onAudioReady %d", streamSizeBytes);
+
+    xr_client_->SendAudioData(static_cast<const char *>(audioData), streamSizeBytes);
+
+    return oboe::DataCallbackResult::Continue;
+}
+
+void ArApplication::RequestAudioInput() {
+    XRClientObserverWrap::RequestAudioInput();
+
+    LOGV("RequestAudioInput");
+
+    // Initialize audio recording
+    oboe::AudioStreamBuilder recording_stream_builder;
+    recording_stream_builder.setDirection(oboe::Direction::Input);
+    recording_stream_builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+    recording_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
+    recording_stream_builder.setFormat(oboe::AudioFormat::I16);
+    recording_stream_builder.setChannelCount(oboe::ChannelCount::Stereo);
+    recording_stream_builder.setSampleRate(CXR_AUDIO_SAMPLING_RATE);
+    recording_stream_builder.setInputPreset(oboe::InputPreset::VoiceCommunication);
+    recording_stream_builder.setDataCallback(this);
+
+    oboe::Result r = recording_stream_builder.openStream(recording_stream_);
+    if (r != oboe::Result::OK) {
+        LOGE("Failed to open recording stream. Error: %s", oboe::convertToText(r));
+        //return; // for now continue to run...
+    }
+    else
+    {
+        r = recording_stream_->start();
+        if (r != oboe::Result::OK)
+        {
+            LOGE("Failed to start recording stream. Error: %s", oboe::convertToText(r));
+            //return; // for now continue to run...
+        } else {
+            LOGV("Start recod stream success");
+        }
+    }
+
+    // if there was an error setting up, turn off sending audio for this connection.
+    if (r != oboe::Result::OK) {
+        LOGV("clear recod stream when failed");
+        if (recording_stream_) {
+            recording_stream_->close();
+            recording_stream_.reset();
+        }
+    } else {
+        LOGV("start recod stream success");
+    }
 }
 
 #endif

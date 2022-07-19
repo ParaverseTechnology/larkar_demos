@@ -46,7 +46,7 @@ task extractCloudXR(type: Copy)  {
 
 task extractOboe(type: Copy) {
     // Copy prefab folders into the expected layout for gradle 3.6
-    from zipTree("${project.rootDir}/libs/oboe-1.5.0.aar")
+    from zipTree("${project.rootDir}/libs/oboe-1.6.1.aar")
     into "${project.rootDir}/libs/Oboe"
     include "**/*.so"
     include "**/*.h"

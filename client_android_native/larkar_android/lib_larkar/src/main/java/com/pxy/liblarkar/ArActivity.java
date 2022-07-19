@@ -3,6 +3,7 @@ package com.pxy.liblarkar;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -188,6 +189,11 @@ public class ArActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (!PermissionManager.hasPermission(this)) {
+            PermissionManager.checkPermission(this);
+        }
+
         JniInterface.onResume(mNativeApplication, getApplicationContext(), this);
         mSurfaceView.onResume();
         // Listen to display changed events to detect 180 rotation, which does not cause config change or view resize.
@@ -215,13 +221,16 @@ public class ArActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mXrSystem.onDestroy();
 
+        Log.d(TAG, "on destory");
         // Synchronized to avoid racing onDrawFrame.
         synchronized (this) {
             JniInterface.destroyNativeApplication(mNativeApplication);
             mNativeApplication = 0;
         }
+        Log.d(TAG, "on destory finish");
     }
 
     @Override

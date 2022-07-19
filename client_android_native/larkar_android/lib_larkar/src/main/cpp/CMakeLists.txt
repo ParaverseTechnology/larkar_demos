@@ -15,6 +15,14 @@ add_library(arcore SHARED IMPORTED)
 set_target_properties(arcore PROPERTIES IMPORTED_LOCATION
         ${ARENGINE_LIBPATH}/${ANDROID_ABI}/libarcore_sdk_c.so)
 
+# oboe
+# Import Oboe
+add_library(oboe-lib SHARED IMPORTED)
+set_target_properties(oboe-lib PROPERTIES IMPORTED_LOCATION
+        ${OBOE_LIBPATH}/${ANDROID_ABI}/liboboe.so
+        )
+include_directories(${OBOE_INCLUDE})
+
 # larkxr sdk
 add_library(lib_lark_xr SHARED IMPORTED)
 set_target_properties(lib_lark_xr PROPERTIES IMPORTED_LOCATION
@@ -102,6 +110,8 @@ target_link_libraries( # Specifies the target library.
         # pxy larkxr sdk
         lib_lark_xr
         lib_lark_common
+        #oboe
+        oboe-lib
 )
 
 if (ENABLE_CLOUDXR STREQUAL "1")
