@@ -17,6 +17,14 @@
 
 #define LOG_TAG "ArApplication"
 
+#ifndef ENABLE_CLOUDXR
+const uint32_t CXR_AUDIO_CHANNEL_COUNT = 2;             ///< Audio is currently always stereo
+const uint32_t CXR_AUDIO_SAMPLE_SIZE = sizeof(int16_t); ///< Audio is currently signed 16-bit samples (little-endian)
+const uint32_t CXR_AUDIO_SAMPLING_RATE = 48000;         ///< Audio is currently always 48khz
+const uint32_t CXR_AUDIO_FRAME_LENGTH_MS = 5;           ///< Sent audio has a 5 ms default frame length.  Received audio has 5 or 10 ms frame length, depending on the configuration.
+const uint32_t CXR_AUDIO_BYTES_PER_MS = CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE * CXR_AUDIO_SAMPLING_RATE / 1000; ///< Total bytes of audio per ms
+#endif
+
 namespace {
     const int AR_SDK_TYPE_ARCORE = 1;
     const int AR_SDK_TYPE_HW_ARENGINE = 2;
@@ -369,57 +377,6 @@ void ArApplication::OnCloudXRReady(const std::string &appServerIp, const std::st
 #endif
 }
 
-#ifdef ENABLE_CLOUDXR
-void ArApplication::UpdateClientState(cxrClientState state, cxrStateReason reason) {
-    LOGI("UpdateClientState state %d reason %d", state, reason);
-    switch (state) {
-        case cxrClientState_ReadyToConnect:
-            ArActivity_Toast("创建CloudXR客户端成功");
-            break;
-        case cxrClientState_ConnectionAttemptInProgress:
-            ArActivity_Toast("开始连接服务器");
-            break;
-        case cxrClientState_StreamingSessionInProgress:
-            ArActivity_Toast("连接服务器成功");
-            break;
-        case cxrClientState_ConnectionAttemptFailed:
-        {
-            if (!prepare_public_ip_.empty()) {
-                need_reconnect_public_ip_ = true;
-            } else {
-                char buff[200];
-                sprintf(buff, "连接CloudXR服务器失败 reason %d", reason);
-                ArActivity_Error(buff);
-            }
-        }
-            break;
-        case cxrClientState_Disconnected:
-        {
-            char buff[200];
-            sprintf(buff, "与CloudXR服务器连接断开 reason %d", reason);
-            ArActivity_Error(buff);
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-void ArApplication::ReceiveUserData(const void *data, uint32_t size) {
-    // ReceiveUserData here
-    LOGI("cloudxr ReceiveUserData ");
-}
-
-void ArApplication::GetTrackingState(glm::mat4 *post_matrix) {
-    // update cloudxr pose
-    glm::mat4 anchor_pose_mat;
-    ar_manager_->GetRawAnchorPose(anchor_pose_mat);
-    glm::mat4 base_frame = glm::inverse(anchor_pose_mat);
-    base_frame = glm::rotate(base_frame, -rotation_radius_, glm::vec3(0, 1, 0));
-    // Setup pose matrix with our base frame
-    *post_matrix = base_frame * glm::inverse(ar_manager_->view_mat());
-}
-
 oboe::DataCallbackResult
 ArApplication::onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int32_t numFrames) {
     //    LOGV("onAudioReady %d", numFrames);
@@ -481,4 +438,54 @@ void ArApplication::RequestAudioInput() {
     }
 }
 
+#ifdef ENABLE_CLOUDXR
+void ArApplication::UpdateClientState(cxrClientState state, cxrStateReason reason) {
+    LOGI("UpdateClientState state %d reason %d", state, reason);
+    switch (state) {
+        case cxrClientState_ReadyToConnect:
+            ArActivity_Toast("创建CloudXR客户端成功");
+            break;
+        case cxrClientState_ConnectionAttemptInProgress:
+            ArActivity_Toast("开始连接服务器");
+            break;
+        case cxrClientState_StreamingSessionInProgress:
+            ArActivity_Toast("连接服务器成功");
+            break;
+        case cxrClientState_ConnectionAttemptFailed:
+        {
+            if (!prepare_public_ip_.empty()) {
+                need_reconnect_public_ip_ = true;
+            } else {
+                char buff[200];
+                sprintf(buff, "连接CloudXR服务器失败 reason %d", reason);
+                ArActivity_Error(buff);
+            }
+        }
+            break;
+        case cxrClientState_Disconnected:
+        {
+            char buff[200];
+            sprintf(buff, "与CloudXR服务器连接断开 reason %d", reason);
+            ArActivity_Error(buff);
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+void ArApplication::ReceiveUserData(const void *data, uint32_t size) {
+    // ReceiveUserData here
+    LOGI("cloudxr ReceiveUserData ");
+}
+
+void ArApplication::GetTrackingState(glm::mat4 *post_matrix) {
+    // update cloudxr pose
+    glm::mat4 anchor_pose_mat;
+    ar_manager_->GetRawAnchorPose(anchor_pose_mat);
+    glm::mat4 base_frame = glm::inverse(anchor_pose_mat);
+    base_frame = glm::rotate(base_frame, -rotation_radius_, glm::vec3(0, 1, 0));
+    // Setup pose matrix with our base frame
+    *post_matrix = base_frame * glm::inverse(ar_manager_->view_mat());
+}
 #endif

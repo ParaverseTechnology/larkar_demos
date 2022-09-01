@@ -30,6 +30,14 @@
 #include "lark_xr/pxy_inner_utils.h"
 #include "lark_xr/xr_latency_collector.h"
 
+#ifndef ENABLE_CLOUDXR
+const uint32_t CXR_AUDIO_CHANNEL_COUNT = 2;             ///< Audio is currently always stereo
+const uint32_t CXR_AUDIO_SAMPLE_SIZE = sizeof(int16_t); ///< Audio is currently signed 16-bit samples (little-endian)
+const uint32_t CXR_AUDIO_SAMPLING_RATE = 48000;         ///< Audio is currently always 48khz
+const uint32_t CXR_AUDIO_FRAME_LENGTH_MS = 5;           ///< Sent audio has a 5 ms default frame length.  Received audio has 5 or 10 ms frame length, depending on the configuration.
+const uint32_t CXR_AUDIO_BYTES_PER_MS = CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE * CXR_AUDIO_SAMPLING_RATE / 1000; ///< Total bytes of audio per ms
+#endif
+
 namespace ndk_hello_cardboard {
 
 namespace {
@@ -717,51 +725,6 @@ void HelloCardboardApp::OnDataChannelOpen() {
   LOGI("OnDataChannelOpen");
 }
 
-#ifdef ENABLE_CLOUDXR
-void HelloCardboardApp::UpdateClientState(cxrClientState state, cxrStateReason reason) {
-  LOGI("UpdateClientState state %d reason %d", state, reason);
-  switch (state) {
-    case cxrClientState_ReadyToConnect:
-      JavaShowToast("创建CloudXR客户端成功");
-      break;
-    case cxrClientState_ConnectionAttemptInProgress:
-      JavaShowToast("开始连接服务器");
-      break;
-    case cxrClientState_StreamingSessionInProgress:
-      JavaShowToast("连接服务器成功");
-      break;
-    case cxrClientState_ConnectionAttemptFailed:
-      {
-        if (!prepare_public_ip_.empty()) {
-          need_reconnect_public_ip_ = true;
-        } else {
-          char buff[200];
-          sprintf(buff, "连接CloudXR服务器失败 reason %d", reason);
-          JavaOnError(buff);
-        }
-      }
-      break;
-    case cxrClientState_Disconnected:
-      {
-        char buff[200];
-        sprintf(buff, "与CloudXR服务器连接断开 reason %d", reason);
-        JavaOnError(buff);
-      }
-      break;
-    default:
-      break;
-  }
-}
-
-void HelloCardboardApp::ReceiveUserData(const void *data, uint32_t size) {
-  // ReceiveUserData here
-  LOGI("cloudxr ReceiveUserData ");
-}
-
-void HelloCardboardApp::GetTrackingState(glm::mat4 *post_matrix) {
-  *post_matrix = toGlm(head_view_);
-}
-
 oboe::DataCallbackResult
 HelloCardboardApp::onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
                                 int32_t numFrames) {
@@ -823,6 +786,49 @@ void HelloCardboardApp::RequestAudioInput() {
     LOGV("start recod stream success");
   }
 }
+#ifdef ENABLE_CLOUDXR
+void HelloCardboardApp::UpdateClientState(cxrClientState state, cxrStateReason reason) {
+  LOGI("UpdateClientState state %d reason %d", state, reason);
+  switch (state) {
+    case cxrClientState_ReadyToConnect:
+      JavaShowToast("创建CloudXR客户端成功");
+      break;
+    case cxrClientState_ConnectionAttemptInProgress:
+      JavaShowToast("开始连接服务器");
+      break;
+    case cxrClientState_StreamingSessionInProgress:
+      JavaShowToast("连接服务器成功");
+      break;
+    case cxrClientState_ConnectionAttemptFailed:
+      {
+        if (!prepare_public_ip_.empty()) {
+          need_reconnect_public_ip_ = true;
+        } else {
+          char buff[200];
+          sprintf(buff, "连接CloudXR服务器失败 reason %d", reason);
+          JavaOnError(buff);
+        }
+      }
+      break;
+    case cxrClientState_Disconnected:
+      {
+        char buff[200];
+        sprintf(buff, "与CloudXR服务器连接断开 reason %d", reason);
+        JavaOnError(buff);
+      }
+      break;
+    default:
+      break;
+  }
+}
 
+void HelloCardboardApp::ReceiveUserData(const void *data, uint32_t size) {
+  // ReceiveUserData here
+  LOGI("cloudxr ReceiveUserData ");
+}
+
+void HelloCardboardApp::GetTrackingState(glm::mat4 *post_matrix) {
+  *post_matrix = toGlm(head_view_);
+}
 #endif
 }  // namespace ndk_hello_cardboard
