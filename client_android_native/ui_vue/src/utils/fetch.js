@@ -10,8 +10,8 @@ class Fetch {
      * @data object data
      * @header object header
      */
-    async Get(api, data) {
-        const res = await axios.get(store.state.Host + "/" + api, { params: data });
+    async Get(api, data, isSR) {
+        const res = await axios.get((isSR ? store.state.SrHost : store.state.Host) + "/" + api, { params: data });
         if (res.data) {
             if (res.data.code == CODE_SUCCESS) {
                 return res.data.result;
@@ -28,8 +28,8 @@ class Fetch {
      * @data object data
      * @header object header
      */
-     async asyncPost(api, data) {
-        const requUrl = store.state.Host + "/" + api;
+     async asyncPost(api, data, isSR) {
+        const requUrl = (isSR ? store.state.SrHost : store.state.Host) + "/" + api;
         const res = await axios.post(requUrl, data);
         if (res.data) {
             if (res.data.code == CODE_SUCCESS) {

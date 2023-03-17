@@ -761,6 +761,7 @@ void HelloCardboardApp::ReceiveUserData(const void *data, uint32_t size) {
 void HelloCardboardApp::GetTrackingState(glm::mat4 *post_matrix) {
   *post_matrix = toGlm(head_view_);
 }
+#endif
 
 oboe::DataCallbackResult
 HelloCardboardApp::onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
@@ -770,7 +771,7 @@ HelloCardboardApp::onAudioReady(oboe::AudioStream *oboeStream, void *audioData,
     LOGV("skip on audio ready %d", numFrames);
     return oboe::DataCallbackResult::Continue;
   }
-  int streamSizeBytes = numFrames * CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE;
+  int streamSizeBytes = numFrames * AUDIO_CHANNEL_COUNT * AUDIO_SAMPLE_SIZE;
 
 //    LOGV("onAudioReady %d", streamSizeBytes);
 
@@ -791,7 +792,7 @@ void HelloCardboardApp::RequestAudioInput() {
   recording_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
   recording_stream_builder.setFormat(oboe::AudioFormat::I16);
   recording_stream_builder.setChannelCount(oboe::ChannelCount::Stereo);
-  recording_stream_builder.setSampleRate(CXR_AUDIO_SAMPLING_RATE);
+  recording_stream_builder.setSampleRate(AUDIO_SAMPLING_RATE);
   recording_stream_builder.setInputPreset(oboe::InputPreset::VoiceCommunication);
   recording_stream_builder.setDataCallback(this);
 
@@ -823,6 +824,4 @@ void HelloCardboardApp::RequestAudioInput() {
     LOGV("start recod stream success");
   }
 }
-
-#endif
 }  // namespace ndk_hello_cardboard

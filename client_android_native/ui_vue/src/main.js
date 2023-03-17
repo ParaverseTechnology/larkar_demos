@@ -10,6 +10,7 @@ const mixin = {
     computed: {
         ...mapState({
             Host: state => state.Host,
+            SrHost: state => state.SrHost,
             selectedArSDKType: state => state.selectedArSDKType,
             hasPermission: state => state.hasPermission,
             arcoreSupportStatus: state => state.arcoreSupportStatus,

@@ -1,10 +1,12 @@
 package com.pxy.larkar_h5ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
+import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -72,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("WebView", consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
             };
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    request.grant(request.getResources());
+                }
+            }
         });
 
         // check permisssion

@@ -11,6 +11,8 @@ export default createStore({
         // Host: "http://192.168.0.55:8181/",
         // Host: "http://222.128.6.137:8585/",
         Host: "",
+        // Host: "https://cloudlark.pingxingyun.com:8180/",
+        SrHost: "",
 
         hasPermission: false,
         selectedArSDKType: Native.AR_SDK_TYPE_ARCORE,
@@ -132,6 +134,9 @@ export default createStore({
     mutations: {
         setHost(state, host) {
             state.Host = host;
+        },        
+        setSrHost(state, host) {
+            state.SrHost = host;
         },
 
         setSelectedArSDKType(state, type) {
@@ -167,11 +172,27 @@ export default createStore({
         // commit, state, getters, dispatch
         saveHost({
             commit
-        }, host) {
+        }, {host, srHost}) {
+
             commit('setHost', host);
+
+            if (srHost) {
+                commit('setSrHost', srHost);
+            } else {
+                commit('setSrHost', host);
+            }
+
             // 去空格
             host = host.trim();
             localStorage.setItem('host', host);
+
+            if (srHost) {
+                srHost = srHost.trim();
+                localStorage.setItem('srHost', srHost);
+            } else {
+                localStorage.setItem('srHost', host);
+            }
+
             try {
                 const url = new URL(host);
                 console.log('native saveserver address ', url, url.hostname, url.port);
@@ -188,6 +209,13 @@ export default createStore({
             if (host) {
                 commit('setHost', host);
             }
+            let srHost = localStorage.getItem('srHost');
+            if (srHost) {
+                commit('setSrHost', srHost);
+            } else if (host) {
+                commit('setSrHost', host);
+            }
+
             try {
                 const url = new URL(host);
                 console.log('native saveserver address ', url, url.hostname, url.port);

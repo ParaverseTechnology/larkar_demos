@@ -12,7 +12,7 @@
                 <div class="block">
                     <div class="block-title">
                         <div>
-                            服务器地址
+                            服务器地址(暂不支持HTTPS)
                         </div>
                         <div>
                             例: http://192.168.0.55:8181/
@@ -24,6 +24,22 @@
                     <div style="margin: 16px;">
                         <van-button round block plain :type="serverAddressButtonType" :loading="checkingServer" loading-text="测试地址中..." @click="onSubmitServerAddress">
                             {{serverAddressButton}}
+                        </van-button>
+                    </div>
+                    <div class="block-title">
+                        <div>
+                            单独设置SR服务器地址(支持HTTPS)
+                        </div>
+                        <div>
+                            例: https://192.168.0.55:8181/
+                        </div>
+                    </div>
+                    <van-field v-model="serverAddressSr" label="地址" placeholder="请输服务器地址" 
+                        :rules="[{ required: true, message: '请输服务器地址' }]">
+                    </van-field>
+                    <div style="margin: 16px;">
+                        <van-button round block plain :type="serverAddressSrButtonType" :loading="checkingSrServer" loading-text="测试地址中..." @click="onSubmitServerAddressSr">
+                            {{serverAddressSrButton}}
                         </van-button>
                     </div>
                 </div>
@@ -136,7 +152,10 @@ export default {
             active: 0,
             checkingServer: false,
             serverAddressStatus: 0,
-            serverAddress: '',
+            serverAddress: '',     
+            checkingSrServer: false,       
+            serverAddressSrStatus: 0,
+            serverAddressSr: '',
         }
     },
     computed: {
@@ -163,6 +182,30 @@ export default {
                 default:
                     return '检测当前地址';
             }
+        },        
+        serverAddressSrButtonType() {
+            switch (this.serverAddressSrStatus) {
+                case 0:
+                    return 'primary';
+                case 1:
+                    return 'success';
+                case 2:
+                    return 'danger';
+                default:
+                    return '';
+            }
+        },
+        serverAddressSrButton() {
+            switch (this.serverAddressSrStatus) {
+                case 0:
+                    return '检测当前地址';
+                case 1:
+                    return '当前地址成功';
+                case 2:
+                    return '当前地址失败';
+                default:
+                    return '检测当前地址';
+            }
         }
     },
     methods: {
@@ -177,7 +220,7 @@ export default {
             }
             try {
                 let url = new URL(this.serverAddress);
-                this.saveHost(this.serverAddress);
+                this.saveHost({host: this.serverAddress, srHost: this.serverAddressSr});
                 console.log("Setup serverAddr", url);
                 this.checkingServer = true;
                 Fetch.Get("/getVersionInfo")
@@ -195,12 +238,42 @@ export default {
             } catch (e) {
                 Toast("URL 格式不正确，正确格式：例: http://192.168.0.55:8181/");
             }
+        },       
+        
+        onSubmitServerAddressSr() {
+            console.log('checking server', this.serverAddressSr, this.SrHost);
+            if (!this.serverAddressSr) {
+                Toast("请输SR服务器地址");
+                return;
+            }
+            try {
+                let url = new URL(this.serverAddressSr);
+                this.saveHost({host: this.serverAddress, srHost: this.serverAddressSr});
+                console.log("Setup serverAddr", url);
+                this.checkingSrServer = true;
+                Fetch.Get("/getVersionInfo", {}, true)
+                .then((res) => {
+                    console.log('检测SR服务器地址成功', res);
+                    Toast("设置成功. SR服务器版本：" + res.version);
+                    this.serverAddressSrStatus = 1;
+                })
+                .catch((e) => {
+                    console.log('检测SR服务器地址失败', e.message);
+                    Toast("检测SR服务器地址失败:" + JSON.stringify(e.message));    
+                    this.serverAddressSrStatus = 2;
+                })
+                .finally(() => { this.checkingSrServer = false; });
+            } catch (e) {
+                Toast("SR URL 格式不正确，正确格式：例: https://192.168.0.55:8181/");
+            }
         },
     },
     mounted() {
-        console.log('setup mounted');
+        console.log('setup mounted', this.Host, this.SrHost);
         this.serverAddress = this.Host;
         this.serverAddressStatus = 0;
+        this.serverAddressSr = this.SrHost;
+        this.serverAddressStatusSr = 0;
         console.log('setup mounted finished');
     },
     beforeUnmount() {

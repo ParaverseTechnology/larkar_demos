@@ -127,7 +127,7 @@ export default {
             }
             try {
                 let url = new URL(this.serverAddress);
-                this.saveHost(this.serverAddress);
+                this.saveHost({host: this.serverAddress});
                 console.log("Setup serverAddr", url);
                 this.checkingServer = true;
                 Fetch.Get("/getVersionInfo")

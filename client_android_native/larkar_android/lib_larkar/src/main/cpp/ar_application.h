@@ -13,7 +13,8 @@
 #include "cloudxr_client.h"
 #endif
 
-//#define LARK_SDK_ID "如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+// #define LARK_SDK_ID "如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+#ifndef LARK_SDK_ID
 // 请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释
 #error "请将 SDK ID 填入第 16 行 LARK_SDK_ID 中，并放开第 16 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #endif
@@ -26,6 +27,10 @@ class ArApplication:
 #endif
 {
 public:
+    const uint32_t AUDIO_CHANNEL_COUNT = 2;             ///< Audio is currently always stereo
+    const uint32_t AUDIO_SAMPLE_SIZE = sizeof(int16_t); ///< Audio is currently singed 16-bit samples (little-endian)
+    const uint32_t AUDIO_SAMPLING_RATE = 48000;         ///< Audio is currently always 48khz
+
     ArApplication(const std::string& appid, int sdkType);
     ~ArApplication();
 

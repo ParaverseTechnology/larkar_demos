@@ -420,6 +420,8 @@ void ArApplication::GetTrackingState(glm::mat4 *post_matrix) {
     *post_matrix = base_frame * glm::inverse(ar_manager_->view_mat());
 }
 
+#endif
+
 oboe::DataCallbackResult
 ArApplication::onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int32_t numFrames) {
     //    LOGV("onAudioReady %d", numFrames);
@@ -427,7 +429,7 @@ ArApplication::onAudioReady(oboe::AudioStream *oboeStream, void *audioData, int3
         LOGV("skip on audio ready %d", numFrames);
         return oboe::DataCallbackResult::Continue;
     }
-    int streamSizeBytes = numFrames * CXR_AUDIO_CHANNEL_COUNT * CXR_AUDIO_SAMPLE_SIZE;
+    int streamSizeBytes = numFrames * AUDIO_CHANNEL_COUNT * AUDIO_SAMPLE_SIZE;
 
 //    LOGV("onAudioReady %d", streamSizeBytes);
 
@@ -448,7 +450,7 @@ void ArApplication::RequestAudioInput() {
     recording_stream_builder.setSharingMode(oboe::SharingMode::Exclusive);
     recording_stream_builder.setFormat(oboe::AudioFormat::I16);
     recording_stream_builder.setChannelCount(oboe::ChannelCount::Stereo);
-    recording_stream_builder.setSampleRate(CXR_AUDIO_SAMPLING_RATE);
+    recording_stream_builder.setSampleRate(AUDIO_SAMPLING_RATE);
     recording_stream_builder.setInputPreset(oboe::InputPreset::VoiceCommunication);
     recording_stream_builder.setDataCallback(this);
 
@@ -481,4 +483,3 @@ void ArApplication::RequestAudioInput() {
     }
 }
 
-#endif

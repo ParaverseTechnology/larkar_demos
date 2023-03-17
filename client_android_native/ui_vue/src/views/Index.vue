@@ -13,51 +13,59 @@
             <van-dropdown-item v-model="region.regionId" :options="regionList" />
       </van-dropdown-menu>
 
-        <van-pull-refresh 
-            v-model="refreshing" 
-            @refresh="onFresh">
-            <van-list class="list"
-                v-model:loading="loading"
-                v-model:error="listError"
-                :finished="finished"
-                finished-text=""
-                error-text="请求失败，点击重新"
-                @load="onNextPage"
-            >
-                <van-grid :column-num="2" :gutter="10" :border="false" :center="false">
-                    <van-grid-item 
-                        class="appli-item" v-for="(item, index) in list" :key="index" @click="onEnterAppli" 
-                        :data-appid="item.appliId" 
-                        :data-appliType="item.appliType"
-                        :data-instanceMax="item.instanceMax"
+        <van-tabs v-model:active="active" sticky animated>
+            <van-tab title='服务器1'>
+                <van-pull-refresh 
+                    v-model="refreshing" 
+                    @refresh="onFresh">
+                    <van-list class="list"
+                        v-model:loading="loading"
+                        v-model:error="listError"
+                        :finished="finished"
+                        finished-text=""
+                        error-text="请求失败，点击重新"
+                        @load="onNextPage"
                     >
-                        <div class="cover">
-                            <div v-if="item.appliType == 9 || item.appliType == 11" class="appli-type">
-                                <img src="../assets/icon-ar.png" alt="" />
-                                <span v-if="item.appliType == 11">CloudXR</span>
-                            </div>
-                            <div v-else-if="item.appliType == 6 || item.appliType == 5 || item.appliType == 3" class="appli-type">
-                                <img src="../assets/icon-vr.png" alt="" />
-                                <span v-if="item.appliType == 6">CloudXR</span>
-                            </div>
-                            
-                            <img v-if="item.picUrl" :src="Host + item.picUrl" />
-                            <img v-else src="../assets/default-cover.jpg" />
-                            <div class="appli-status">
-                                <span>{{item.runCnt}}/{{item.instanceMax}}</span>
-                            </div>
-                        </div>
-                        <div class="appli-info van-multi-ellipsis--l2">
-                            <div v-if="item.appliType == 13" class="appli-type">
-                                <span v-if="item.appliType == 13">PixelStreaming</span>
-                            </div>
-                            <div>{{item.appliName}}</div>
-                        </div>
-                        <!-- <img src="../assets/arrow-right.png" class='icon-right' mode="aspectFill" /> -->
-                    </van-grid-item>
-                </van-grid>
-            </van-list>
-        </van-pull-refresh>
+                        <van-grid :column-num="2" :gutter="10" :border="false" :center="false">
+                            <van-grid-item 
+                                class="appli-item" v-for="(item, index) in list" :key="index" @click="onEnterAppli" 
+                                :data-appid="item.appliId" 
+                                :data-appliType="item.appliType"
+                                :data-instanceMax="item.instanceMax"
+                            >
+                                <div class="cover">
+                                    <div v-if="item.appliType == 9 || item.appliType == 11" class="appli-type">
+                                        <img src="../assets/icon-ar.png" alt="" />
+                                        <span v-if="item.appliType == 11">CloudXR</span>
+                                    </div>
+                                    <div v-else-if="item.appliType == 6 || item.appliType == 5 || item.appliType == 3" class="appli-type">
+                                        <img src="../assets/icon-vr.png" alt="" />
+                                        <span v-if="item.appliType == 6">CloudXR</span>
+                                    </div>
+                                    
+                                    <img v-if="item.picUrl" :src="Host + item.picUrl" />
+                                    <img v-else src="../assets/default-cover.jpg" />
+                                    <div class="appli-status">
+                                        <span>{{item.runCnt}}/{{item.instanceMax}}</span>
+                                    </div>
+                                </div>
+                                <div class="appli-info van-multi-ellipsis--l2">
+                                    <div v-if="item.appliType == 13" class="appli-type">
+                                        <span v-if="item.appliType == 13">PixelStreaming</span>
+                                    </div>
+                                    <div>{{item.appliName}}</div>
+                                </div>
+                                <!-- <img src="../assets/arrow-right.png" class='icon-right' mode="aspectFill" /> -->
+                            </van-grid-item>
+                        </van-grid>
+                    </van-list>
+                </van-pull-refresh>
+            </van-tab>
+            <van-tab title='服务器2'>
+
+            </van-tab>
+        </van-tabs>
+
         <van-overlay :show="showLoading" @click="showLoading = false">
               <div class="loading-wrapper">
                 <van-loading type="spinner" color="#1989fa" />
@@ -82,6 +90,7 @@ export default {
                 { text: 'SR', value: 'SIM' },
                 { text: 'VR', value: 'VR' },
             ],
+            hasSrAddress: false,
             region: {
                 delay: 9999,
                 regionId: '',

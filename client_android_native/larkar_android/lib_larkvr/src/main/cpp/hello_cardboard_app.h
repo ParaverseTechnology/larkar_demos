@@ -56,6 +56,10 @@ class HelloCardboardApp :
 #endif
 {
  public:
+    const uint32_t AUDIO_CHANNEL_COUNT = 2;             ///< Audio is currently always stereo
+    const uint32_t AUDIO_SAMPLE_SIZE = sizeof(int16_t); ///< Audio is currently singed 16-bit samples (little-endian)
+    const uint32_t AUDIO_SAMPLING_RATE = 48000;         ///< Audio is currently always 48khz
+
   /**
    * Creates a HelloCardboardApp.
    *
