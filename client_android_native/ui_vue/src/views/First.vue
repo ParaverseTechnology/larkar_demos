@@ -173,6 +173,8 @@ export default {
         if (!this.isArcoreReady && this.isArengineReady) {
             this.selectARSDK(2);
         }
+        // this.serverAddress = "http://222.128.6.137:8585/"
+        // this.onSubmitServerAddress();
     },
 }
 </script>

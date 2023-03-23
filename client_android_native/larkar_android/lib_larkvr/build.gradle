@@ -96,8 +96,8 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-javalite:3.19.4'
 
     // larkxr sdk
-    implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
-    natives(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
+    implementation(name: 'larkxr-kit-3.2.2.0-build-1-pxyinner', ext: 'aar')
+    natives(name: 'larkxr-kit-3.2.2.0-build-1-pxyinner', ext: 'aar')
 
     // cardboard sdk
     implementation(name: 'cardboard-sdk-release-1.16', ext: 'aar')

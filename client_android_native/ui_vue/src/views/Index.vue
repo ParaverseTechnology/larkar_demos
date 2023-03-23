@@ -13,8 +13,8 @@
             <van-dropdown-item v-model="region.regionId" :options="regionList" />
       </van-dropdown-menu>
 
-        <van-tabs v-model:active="active" sticky animated>
-            <van-tab title='服务器1'>
+        <!-- <van-tabs v-model:active="active" sticky animated> -->
+            <!-- <van-tab title='服务器1'> -->
                 <van-pull-refresh 
                     v-model="refreshing" 
                     @refresh="onFresh">
@@ -60,11 +60,11 @@
                         </van-grid>
                     </van-list>
                 </van-pull-refresh>
-            </van-tab>
-            <van-tab title='服务器2'>
+            <!-- </van-tab> -->
+            <!-- <van-tab title='服务器2'>
 
-            </van-tab>
-        </van-tabs>
+            </van-tab> -->
+        <!-- </van-tabs> -->
 
         <van-overlay :show="showLoading" @click="showLoading = false">
               <div class="loading-wrapper">

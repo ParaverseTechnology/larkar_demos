@@ -102,8 +102,8 @@ dependencies {
     natives 'com.google.ar:core:1.30.0'
 
     // larkxr sdk
-    implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
-    natives(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
+    implementation(name: 'larkxr-kit-3.2.2.0-build-1-pxyinner', ext: 'aar')
+    natives(name: 'larkxr-kit-3.2.2.0-build-1-pxyinner', ext: 'aar')
 
     implementation(name: 'oboe-1.6.1', ext: 'aar')
 

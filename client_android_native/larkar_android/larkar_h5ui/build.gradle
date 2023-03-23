@@ -12,7 +12,7 @@ android {
         minSdk MIN_SDK_VERSION
         targetSdk TARGET_SDK_VERSION
         versionCode 1
-        versionName "3.2.2.2"
+        versionName "3.2.2.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -90,7 +90,7 @@ dependencies {
 
     implementation 'com.huawei.hms:arenginesdk:3.7.0.3'
     implementation 'com.google.ar:core:1.30.0'
-    implementation(name: 'larkxr-kit-3.2.2.0-build-1', ext: 'aar')
+    implementation(name: 'larkxr-kit-3.2.2.0-build-1-pxyinner', ext: 'aar')
 
     implementation(name: 'oboe-1.6.1', ext: 'aar')
 

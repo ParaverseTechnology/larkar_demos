@@ -106,9 +106,9 @@ void ArApplication::OnSurfaceCreated() {
         LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
     }
 #else
-    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
-        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
-    }
+//    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
+//        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+//    }
 #endif
 
 #ifdef ENABLE_CLOUDXR
@@ -283,8 +283,8 @@ void ArApplication::OnTouched(float x, float y, jboolean longtap) {
 
         // SendTouchDataToDataChannel
         if (xr_client_->media_ready()) {
-            char buff[50];
-            sprintf(buff, "{ type: %d, x: %f, y: %f }", JSON_COMMAND_TOUCH_UP, x, y);
+            char buff[100];
+            sprintf(buff, R"({ "type": %d, "x": %f, "y": %f })", JSON_COMMAND_TOUCH_UP, x, y);
             xr_client_->SendData(buff);
         }
     }

@@ -26,7 +26,7 @@
                             {{serverAddressButton}}
                         </van-button>
                     </div>
-                    <div class="block-title">
+                    <!-- <div class="block-title">
                         <div>
                             单独设置SR服务器地址(支持HTTPS)
                         </div>
@@ -41,7 +41,7 @@
                         <van-button round block plain :type="serverAddressSrButtonType" :loading="checkingSrServer" loading-text="测试地址中..." @click="onSubmitServerAddressSr">
                             {{serverAddressSrButton}}
                         </van-button>
-                    </div>
+                    </div> -->
                 </div>
             </van-tab>
             <van-tab title='AR 环境'>
