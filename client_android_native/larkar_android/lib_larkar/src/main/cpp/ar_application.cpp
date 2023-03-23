@@ -106,9 +106,9 @@ void ArApplication::OnSurfaceCreated() {
         LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
     }
 #else
-//    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
-//        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
-//    }
+    if (!xr_client_->InitSdkAuthorization(LARK_SDK_ID)) {
+        LOGV("init sdk auth faild %d %s", xr_client_->last_error_code(), xr_client_->last_error_message().c_str());
+    }
 #endif
 
 #ifdef ENABLE_CLOUDXR

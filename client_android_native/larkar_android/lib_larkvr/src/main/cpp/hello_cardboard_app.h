@@ -39,7 +39,7 @@
 //#define LARK_SDK_ID "如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #ifndef LARK_SDK_ID
 // 请将 SDK ID 填入第 39 行 LARK_SDK_ID 中，并放开第 39 行注释
-//#error "请将 SDK ID 填入第 39 行 LARK_SDK_ID 中，并放开第 39 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
+#error "请将 SDK ID 填入第 39 行 LARK_SDK_ID 中，并放开第 39 行注释;如果没有 SDK 授权码，联系 business@pingxingyun.com 获取,注意是 SDK 本身的授权码，不是服务器上的授权"
 #endif
 
 namespace ndk_hello_cardboard {
