@@ -33,8 +33,11 @@ public class Controller : MonoBehaviour
 
         Debug.Log("Connect Result " + restult);
 
-        // var testCmd = new JsonCmd(JsonCmd.CmdType.TOUCH_UP, 1.0001f, 2.0001f);
-        // Debug.Log("test cmd " + testCmd.ToJson() + " " + testCmd.ToJson().Length);
+        JsonCmd test = new JsonCmd(JsonCmd.CmdType.TOUCH_UP, 0, 0);
+
+        OnTextMessage(" { type: 1002, x: 1455.000000, y: 768.000000 } ");
+        OnTextMessage(" { \"type\": 1002, \"x\": 1455.000000, \"y\": 768.000000 } ");
+        OnTextMessage(test.ToJson());
     }
 
 
@@ -61,7 +64,6 @@ public class Controller : MonoBehaviour
     #region trigger
     void RandomTrigger()
     {
-        Debug.Log("RandomTrigger");
         string[] triggers = { "walk", "fly", "run", "idel" };
         Trigger(triggers[UnityEngine.Random.Range(0, triggers.Length)]);
     }
@@ -118,7 +120,6 @@ public class Controller : MonoBehaviour
 
         public JsonCmd(CmdType type, float x, float y)
         {
-            this.type = type;
             this.x = x;
             this.y = y;
         }
@@ -135,6 +136,9 @@ public class Controller : MonoBehaviour
         try
         {
             JsonCmd cmd = JsonCmd.ParseJsonCmd(msg);
+
+            Debug.Log("cmd " + cmd + " " + cmd.ToJson());
+
             if (cmd.type == JsonCmd.CmdType.TOUCH_UP)
             {
                 RandomTrigger();
