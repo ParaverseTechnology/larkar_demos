@@ -31,13 +31,13 @@ public class Controller : MonoBehaviour
         // start connect
         lark.DataChannelNativeApi.ApiRestult restult = lark.LarkManager.Instance.StartConnect();
 
-        Debug.Log("Connect Result " + restult);
+        Debug.Log("Connect Result restult=" + restult + " ;TaskId=" + lark.LarkManager.Instance.TaskId);
 
-        JsonCmd test = new JsonCmd(JsonCmd.CmdType.TOUCH_UP, 0, 0);
+        // JsonCmd test = new JsonCmd(JsonCmd.CmdType.TOUCH_UP, 0, 0);
 
-        OnTextMessage(" { type: 1002, x: 1455.000000, y: 768.000000 } ");
-        OnTextMessage(" { \"type\": 1002, \"x\": 1455.000000, \"y\": 768.000000 } ");
-        OnTextMessage(test.ToJson());
+        // OnTextMessage(" { type: 1002, x: 1455.000000, y: 768.000000 } ");
+        // OnTextMessage(" { \"type\": 1002, \"x\": 1455.000000, \"y\": 768.000000 } ");
+        // OnTextMessage(test.ToJson());
     }
 
 
