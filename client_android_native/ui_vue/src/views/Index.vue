@@ -12,7 +12,7 @@
             </template>
         </van-nav-bar>
         <span style="position: absolute;opacity: 0">{{ dateTimeToFreshDom }} {{$t('message.setUpPage.title')}}</span>
-        <div class="banner">
+        <div class="banner" style="margin-top: 1px">
             <img src="../assets/WX20210807-233343.jpg" alt="">
         </div>
         <van-dropdown-menu>
