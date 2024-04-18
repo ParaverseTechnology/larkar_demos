@@ -6,4 +6,5 @@ module.exports = {
     productionSourceMap: false,
     outputDir: '../larkar_android/larkar_h5ui/src/main/assets/web/',
     parallel: false,
+    lintOnSave: false
 }

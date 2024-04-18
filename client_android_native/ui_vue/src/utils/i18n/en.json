@@ -1,0 +1,63 @@
+{
+  "message":{
+  "back": "Back",
+  "pleaseInput": "Please Input",
+  "process": "process",
+  "success": "success",
+  "submit": "submit",
+  "setUpPage": {
+    "title": "SetUp",
+    "serverAddress": "Server Address",
+    "arEnv": "AR Env",
+    "serverAddressTip": "serverAddress(Not Support HTTPS)",
+    "serverAddressTip1": "e.g.: http://192.168.0.55:8181/",
+    "serverAddressStatus0": "Detect current address",
+    "serverAddressStatus1": "Current address successful",
+    "serverAddressStatus2": "Current address failed",
+    "serverAddressTesting": "Testing address",
+    "permissions": "permissions",
+    "camera": "camera",
+    "Obtained": "Obtained",
+    "notObtained": "NotObtained",
+    "check": "check",
+    "install": "install",
+    "useARCore": "Use ARCore",
+    "useAREngine": "Use useAREngine",
+    "QuickSettings": "QuickSettings",
+    "Fast": "Fast",
+    "SD": "SD",
+    "HD": "HD",
+    "submitAddressResp0": " Set successfully Server version:",
+    "submitAddressResp1": " Failed to detect server address",
+    "submitAddressResp2": " The URL format is incorrect, correct format: Example: http://192.168.0.55:8181/",
+    "unsupportedArTip": "No available AR SDK environment found, currently only supporting SR/VR applications",
+    "supportedArTip": "The AR environment is ready to enter the homepage",
+
+    "arcoreSupportStatus0": "supported",
+    "arcoreSupportStatus1": "Supported but requires status update",
+    "arcoreSupportStatus2": "Not supported",
+    "arcoreSupportStatus3": "Unknown if supported",
+
+    "arcoreInstallStatus0": "already installed",
+    "arcoreInstallStatus1": "Installation required",
+    "arcoreInstallStatus2": "Not supported",
+    "arcoreInstallStatus3": "Unknown whether to install or not",
+
+    "arcoreStatusReason0": "Unknown environment",
+    "arcoreStatusReason1": "Not supported",
+    "arcoreStatusReason2": "Ready, but status needs to be updated",
+    "arcoreStatusReason3": "Ready",
+    "arcoreStatusReason4": "Installation environment required",
+    "arcoreStatusReason5": "Installation failed"
+  },
+  "Index": {
+    "regionList0": "Unconfigured region",
+    "All": "All",
+    "localServer": "Local server",
+    "toastMsg0": "Request failed, please confirm if the network connection and server address are correct",
+    "toastMsg1": "There's nothing more left~",
+    "toastMsg2": "The current native compilation library does not support CloudXR",
+    "toastMsg3": "The AR environment is not ready and currently only supports SR applications",
+    "toastMsg4": "Insufficient rendering instances"
+  }
+}}

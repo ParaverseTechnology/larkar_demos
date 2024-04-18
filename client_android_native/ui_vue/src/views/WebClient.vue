@@ -2,7 +2,7 @@
     <div class="container">
         <van-nav-bar
             title="LarkXR"
-            left-text="返回"
+            :left-text="$t('back')"
             left-arrow
             @click-left="onClickLeft"
         />
