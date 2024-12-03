@@ -8,11 +8,11 @@
 
 1. In your Unity3D project, Go to "File" >> click "Build Settings"
 
-![](./doc/build_en.png)
+![](./doc/build_en.PNG)
 
 2. Click "Player Settings"
 
-![](./doc/player_en.png)
+![](./doc/player_en.PNG)
 
 3. Scroll down to XR Setting >> Add OpenVR  >> after loading, back to the "Build Settings"
 
